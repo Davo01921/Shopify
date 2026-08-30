@@ -25,7 +25,7 @@ from bs4 import BeautifulSoup, Tag
 
 BASE = "https://daluawholesale.com.au"
 TABLE_URL = f"{BASE}/wpt_product_table/shop/"
-UA = "Mozilla/5.0 (compatible; NTA-DALUA-Catalog/1.3; +catalog-audit)"
+UA = "Mozilla/5.0 (compatible; NTA-DALUA-Catalog/1.4; +catalog-audit)"
 MONEY = re.compile(r"([0-9]+(?:\.[0-9]{1,2})?)")
 STOCK = re.compile(r"(?:(\d+)\s+in stock|out of stock)", re.I)
 PAGE = re.compile(r"/page/(\d+)/?", re.I)
@@ -274,9 +274,6 @@ def ajax_config(html: str) -> tuple[str, str, str]:
     if not table:
         raise RuntimeError("Woo Product Table element not found")
 
-    # Plugin versions have used several attribute names. Try known names first,
-    # then inspect all data-* values on the table and its wrapper for JSON-like
-    # query arguments.
     args = ""
     known_names = (
         "data-data_json", "data_data_json", "data-json", "data_json",
@@ -323,6 +320,8 @@ def ajax_config(html: str) -> tuple[str, str, str]:
             break
     if not ajax_url:
         ajax_url = f"{BASE}/wp-admin/admin-ajax.php"
+    else:
+        ajax_url = urljoin(BASE + "/", ajax_url)
 
     if not args or not temp:
         diagnostic = {
