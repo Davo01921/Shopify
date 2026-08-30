@@ -1,0 +1,16 @@
+DALUA AU 719
+Nature Pets 1278
+IW Aquariums 2500
+Nature Aquariums 3016
+{
+  "input_candidates": 163,
+  "priced": 31,
+  "insufficient_market_data": 130,
+  "below_cost_review": 2,
+  "retailers": {
+    "DALUA AU": 719,
+    "Nature Pets": 1278,
+    "IW Aquariums": 2500,
+    "Nature Aquariums": 3016
+  }
+}
