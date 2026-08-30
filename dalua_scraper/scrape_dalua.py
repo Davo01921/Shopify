@@ -25,7 +25,7 @@ from bs4 import BeautifulSoup, Tag
 
 BASE = "https://daluawholesale.com.au"
 TABLE_URL = f"{BASE}/wpt_product_table/shop/"
-UA = "Mozilla/5.0 (compatible; NTA-DALUA-Catalog/1.2; +catalog-audit)"
+UA = "Mozilla/5.0 (compatible; NTA-DALUA-Catalog/1.3; +catalog-audit)"
 MONEY = re.compile(r"([0-9]+(?:\.[0-9]{1,2})?)")
 STOCK = re.compile(r"(?:(\d+)\s+in stock|out of stock)", re.I)
 PAGE = re.compile(r"/page/(\d+)/?", re.I)
@@ -183,7 +183,6 @@ def parse_prices(row: Tag) -> tuple[Decimal | None, Decimal | None]:
         if ins_node:
             sale = money(ins_node.get_text(" ", strip=True))
         else:
-            # Current price often follows <del> without <ins> in DALUA's table.
             full_values = [Decimal(v) for v in MONEY.findall(cell.get_text(" ", strip=True).replace(",", ""))]
             if full_values:
                 sale = full_values[-1]
@@ -254,26 +253,66 @@ def page_count(html: str) -> int:
     return max(pages)
 
 
+def _attr_snapshot(node: Tag | None) -> dict[str, str]:
+    if node is None:
+        return {}
+    out: dict[str, str] = {}
+    for key, value in node.attrs.items():
+        text = " ".join(value) if isinstance(value, list) else str(value)
+        out[str(key)] = text[:1000]
+    return out
+
+
+def _looks_like_query_args(value: str) -> bool:
+    low = html_lib.unescape(value).lower()
+    return any(token in low for token in ("posts_per_page", "post_type", "product_cat", "orderby", "paged", "wc_query")) and ("{" in low or "[" in low)
+
+
 def ajax_config(html: str) -> tuple[str, str, str]:
     soup = BeautifulSoup(html, "lxml")
     table = soup.select_one("table#wpt_table") or soup.select_one("table.wpt_product_table")
     if not table:
         raise RuntimeError("Woo Product Table element not found")
-    args = table.get("data-data_json") or table.get("data_data_json") or ""
-    args = html_lib.unescape(args)
-    if not args:
-        raise RuntimeError("Woo Product Table data-data_json not found")
+
+    # Plugin versions have used several attribute names. Try known names first,
+    # then inspect all data-* values on the table and its wrapper for JSON-like
+    # query arguments.
+    args = ""
+    known_names = (
+        "data-data_json", "data_data_json", "data-json", "data_json",
+        "data-query_args", "data-query-args", "data-args", "data-args_json",
+    )
+    nodes: list[Tag] = [table]
+    wrapper = table.find_parent(class_=re.compile(r"wpt_product_table_wrapper"))
+    if wrapper:
+        nodes.append(wrapper)
+    ancestor = table.find_parent(id=re.compile(r"^table_id_"))
+    if ancestor and ancestor not in nodes:
+        nodes.append(ancestor)
+    for node in nodes:
+        for name in known_names:
+            value = node.get(name)
+            if value:
+                args = str(value)
+                break
+        if args:
+            break
+        for name, value in node.attrs.items():
+            if str(name).startswith("data-"):
+                text = " ".join(value) if isinstance(value, list) else str(value)
+                if _looks_like_query_args(text):
+                    args = text
+                    break
+        if args:
+            break
+    args = html_lib.unescape(args).strip()
 
     temp = ""
-    pagination = soup.select_one(".wpt_table_pagination[data-temp_number]")
+    pagination = soup.select_one(".wpt_table_pagination[data-temp_number]") or soup.select_one(".wpt_table_pagination")
     if pagination:
-        temp = str(pagination.get("data-temp_number") or "")
-    if not temp:
-        ancestor = table.find_parent(id=re.compile(r"^table_id_"))
-        if ancestor and ancestor.get("id"):
-            temp = str(ancestor["id"]).replace("table_id_", "")
-    if not temp:
-        raise RuntimeError("Woo Product Table temp_number not found")
+        temp = str(pagination.get("data-temp_number") or pagination.get("data-temp-number") or "")
+    if not temp and ancestor and ancestor.get("id"):
+        temp = str(ancestor["id"]).replace("table_id_", "")
 
     ajax_url = ""
     for script in soup.find_all("script"):
@@ -284,6 +323,16 @@ def ajax_config(html: str) -> tuple[str, str, str]:
             break
     if not ajax_url:
         ajax_url = f"{BASE}/wp-admin/admin-ajax.php"
+
+    if not args or not temp:
+        diagnostic = {
+            "table": _attr_snapshot(table),
+            "wrapper": _attr_snapshot(wrapper),
+            "ancestor": _attr_snapshot(ancestor),
+            "pagination": _attr_snapshot(pagination),
+            "ajax_url": ajax_url,
+        }
+        raise RuntimeError("Woo Product Table AJAX config incomplete: " + json.dumps(diagnostic, ensure_ascii=False))
     return ajax_url, temp, args
 
 
