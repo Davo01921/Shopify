@@ -2,6 +2,7 @@ DALUA AU 719
 Nature Pets 1278
 IW Aquariums 2500
 Nature Aquariums 3016
+The Tech Den 2511
 {
   "input_candidates": 148,
   "priced": 27,
@@ -11,6 +12,7 @@ Nature Aquariums 3016
     "DALUA AU": 719,
     "Nature Pets": 1278,
     "IW Aquariums": 2500,
-    "Nature Aquariums": 3016
+    "Nature Aquariums": 3016,
+    "The Tech Den": 2511
   }
 }
