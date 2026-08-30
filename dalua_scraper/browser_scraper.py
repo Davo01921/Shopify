@@ -46,8 +46,6 @@ def click_page(page, target: int, old_signature: str) -> None:
             chosen = link
             break
     if chosen is None:
-        # The pagination window may hide the exact number; the plugin marks the
-        # forward link as next. Clicking it advances exactly one page.
         next_link = page.locator('.wpt_table_pagination a.next, .wpt_table_pagination a.next.page-numbers')
         if next_link.count() == 0:
             raise RuntimeError(f'No pagination control found for target page {target}')
@@ -56,7 +54,7 @@ def click_page(page, target: int, old_signature: str) -> None:
     chosen.click()
     page.wait_for_function(
         "old => { const r=document.querySelector('table#wpt_table tbody tr'); return r && r.innerText.slice(0,300)!==old; }",
-        old_signature,
+        arg=old_signature,
         timeout=30000,
     )
     page.wait_for_timeout(250)
@@ -101,8 +99,6 @@ def main() -> int:
 
         browser.close()
 
-    # Deduplicate defensively, but preserve distinct variants/items with the
-    # same title if their product URL or image differs.
     unique = {}
     for product in products:
         key = (product.product_page_url,) if product.product_page_url else (
