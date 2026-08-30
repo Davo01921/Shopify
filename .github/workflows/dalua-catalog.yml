@@ -2,12 +2,12 @@ name: DALUA catalogue scrape
 
 on:
   workflow_dispatch:
-    inputs:
-      prices_ex_gst:
-        description: 'DALUA displayed prices confirmed EX GST'
-        required: true
-        type: boolean
-        default: false
+  push:
+    branches:
+      - codex/dalua-catalog-scraper
+    paths:
+      - 'dalua_scraper/**'
+      - '.github/workflows/dalua-catalog.yml'
   schedule:
     - cron: '15 18 * * 0'
 
@@ -30,11 +30,7 @@ jobs:
           cache-dependency-path: dalua_scraper/requirements.txt
       - run: pip install -r dalua_scraper/requirements.txt
       - name: Scrape DALUA
-        shell: bash
-        run: |
-          EXTRA=''
-          if [[ '${{ github.event_name }}' == 'workflow_dispatch' && '${{ inputs.prices_ex_gst }}' == 'true' ]]; then EXTRA='--prices-ex-gst'; fi
-          python dalua_scraper/scrape_dalua.py $EXTRA
+        run: python dalua_scraper/scrape_dalua.py
       - name: Validate catalogue
         run: |
           python - <<'PY'
@@ -44,10 +40,13 @@ jobs:
           s=json.loads((p/'summary.json').read_text())
           rows=list(csv.DictReader((p/'dalua_catalog.csv').open(encoding='utf-8-sig')))
           assert rows, 'empty catalogue'
+          assert s['prices_ex_gst_confirmed'] is True, s
+          assert s['gst_rate'] == '10%', s
           assert s['errors']==0, s
           assert s['with_images'] >= max(1, int(len(rows)*0.90)), s
           assert len({r['product_page_url'] for r in rows}) == len(rows), 'duplicate product URLs'
           assert all(r['title'] for r in rows), 'missing title'
+          assert all(r['regular_cost_plus_gst'] or r['regular_cost_ex_gst'] == '' for r in rows), 'GST calculation missing where cost exists'
           print('VALIDATED', s)
           PY
       - uses: actions/upload-artifact@v4
