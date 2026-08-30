@@ -8,6 +8,7 @@ on:
     paths:
       - 'dalua_scraper/store_api_scraper.py'
       - 'dalua_scraper/scrape_dalua.py'
+      - 'dalua_scraper/reconcile_shopify.py'
       - 'dalua_scraper/requirements.txt'
       - '.github/workflows/dalua-catalog.yml'
   schedule:
@@ -62,16 +63,40 @@ jobs:
           assert s['with_descriptions'] >= int(len(rows)*0.80), s
           print('VALIDATED', s)
           PY
+      - name: Reconcile against Shopify
+        id: reconcile
+        if: steps.validate.outcome == 'success'
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          python dalua_scraper/reconcile_shopify.py 2>&1 | tee dalua_scraper/output/reconciliation.log
+      - name: Validate reconciliation
+        id: reconcile_validate
+        if: steps.reconcile.outcome == 'success'
+        continue-on-error: true
+        run: |
+          python - <<'PY'
+          import csv, json
+          from pathlib import Path
+          p=Path('dalua_scraper/output')
+          s=json.loads((p/'reconciliation_summary.json').read_text())
+          rows=list(csv.DictReader((p/'dalua_shopify_reconciliation.csv').open(encoding='utf-8-sig')))
+          assert len(rows) == s['dalua_products'] == 477, (len(rows), s)
+          assert s['exact'] + s['probable'] + s['missing'] + s['exclude'] == 477, s
+          assert s['shopify_published_products'] > 100, s
+          assert all(r['classification'] in {'exact','probable','missing','exclude'} for r in rows)
+          print('RECONCILIATION VALIDATED', s)
+          PY
       - name: Persist outputs and diagnostics
         if: always()
         run: |
-          printf '{"scrape":"%s","validate":"%s"}\n' '${{ steps.scrape.outcome }}' '${{ steps.validate.outcome }}' > dalua_scraper/output/workflow_status.json
+          printf '{"scrape":"%s","validate":"%s","reconcile":"%s","reconcile_validate":"%s"}\n' '${{ steps.scrape.outcome }}' '${{ steps.validate.outcome }}' '${{ steps.reconcile.outcome }}' '${{ steps.reconcile_validate.outcome }}' > dalua_scraper/output/workflow_status.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -f dalua_scraper/output/
           git diff --cached --quiet && exit 0
-          git commit -m "Update DALUA scrape output"
+          git commit -m "Update DALUA scrape and Shopify reconciliation"
           git push origin HEAD:codex/dalua-catalog-scraper
       - name: Enforce success
-        if: steps.scrape.outcome != 'success' || steps.validate.outcome != 'success'
+        if: steps.scrape.outcome != 'success' || steps.validate.outcome != 'success' || steps.reconcile.outcome != 'success' || steps.reconcile_validate.outcome != 'success'
         run: exit 1
