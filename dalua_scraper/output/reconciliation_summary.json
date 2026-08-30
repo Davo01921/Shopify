@@ -1,0 +1,11 @@
+{
+  "dalua_products": 477,
+  "shopify_published_products": 2090,
+  "exact": 6,
+  "probable": 40,
+  "missing": 427,
+  "exclude": 4,
+  "probable_threshold": 0.82,
+  "generated_source": "https://nanotanksaustralia.com.au",
+  "retail_price_enrichment": "deferred to matched products phase"
+}

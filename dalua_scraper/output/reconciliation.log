@@ -1,0 +1,21 @@
+DALUA=477 Shopify published=2090
+Compared 50/477
+Compared 100/477
+Compared 150/477
+Compared 200/477
+Compared 250/477
+Compared 300/477
+Compared 350/477
+Compared 400/477
+Compared 450/477
+{
+  "dalua_products": 477,
+  "shopify_published_products": 2090,
+  "exact": 6,
+  "probable": 40,
+  "missing": 427,
+  "exclude": 4,
+  "probable_threshold": 0.82,
+  "generated_source": "https://nanotanksaustralia.com.au",
+  "retail_price_enrichment": "deferred to matched products phase"
+}
