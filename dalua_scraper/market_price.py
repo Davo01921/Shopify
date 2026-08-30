@@ -8,21 +8,34 @@ from urllib.parse import urljoin
 import requests
 SRC=Path('dalua_scraper/output/dalua_freshwater_candidates.csv'); OUT=Path('dalua_scraper/output')
 RETAILERS={'DALUA AU':'https://dalua.com.au','Nature Aquariums':'https://www.natureaquariums.com.au','Nature Pets':'https://naturepets.com.au','IW Aquariums':'https://iwaquariums.com.au'}
-UA='Mozilla/5.0 (compatible; NTA-Market-Pricing/1.2)'
-SIZE_RE=re.compile(r'(?i)\b\d+(?:\.\d+)?\s*(?:ml|l|g|kg|cm|mm|w|inch|inches)\b')
+UA='Mozilla/5.0 (compatible; NTA-Market-Pricing/1.3)'
+SIZE_RE=re.compile(r'(?i)\b(\d+(?:\.\d+)?)\s*(ml|l|g|kg|cm|mm|w|inch|inches)\b')
 GENERIC={'wio','dalua','fresh','aquarium','aquariums','stone','stones','rock','rocks','nano','mega','box','set','kit','bag','river','riverbed','wood','boulder','boulders','the','and','of','for','with','per','kg','cm','mm','ml','litre','litres'}
 def norm(s): return re.sub(r'\s+',' ',re.sub(r'[^a-z0-9]+',' ',(s or '').lower())).strip()
-def sizes(s): return {norm(x) for x in SIZE_RE.findall(s or '')}
-def model_tokens(s): return {t for t in norm(SIZE_RE.sub(' ',s or '')).split() if len(t)>2 and t not in GENERIC and not t.isdigit()}
+def sizes(s): return [(float(v),u.lower().replace('inches','inch')) for v,u in SIZE_RE.findall(s or '')]
+def sizes_compatible(a,b):
+ sa,sb=sizes(a),sizes(b)
+ if not sa or not sb:return True
+ for va,ua in sa:
+  for vb,ub in sb:
+   if ua!=ub:continue
+   if va==vb:return True
+   if ua=='kg' and max(va,vb)>=10 and abs(va-vb)<=1.1:return True
+   if max(va,vb)>0 and abs(va-vb)/max(va,vb)<=0.03:return True
+ return False
+def strip_sizes(s): return SIZE_RE.sub(' ',s or '')
+def model_tokens(s): return {t for t in norm(strip_sizes(s)).split() if len(t)>2 and t not in GENERIC and not t.isdigit()}
+def fuzzy_token_overlap(ma,mb):
+ if not ma:return 1.0
+ hit=0
+ for x in ma:
+  if any(x==y or SequenceMatcher(None,x,y).ratio()>=.78 for y in mb):hit+=1
+ return hit/len(ma)
 def score(a,b):
  na,nb=norm(a),norm(b)
- if not na or not nb:return 0.0
- sa,sb=sizes(a),sizes(b)
- if sa and sb and not (sa&sb): return 0.0
+ if not na or not nb or not sizes_compatible(a,b):return 0.0
  ma,mb=model_tokens(a),model_tokens(b)
- if ma:
-  overlap=len(ma&mb)/len(ma)
-  if overlap<0.5:return 0.0
+ if fuzzy_token_overlap(ma,mb)<0.5:return 0.0
  seq=SequenceMatcher(None,na,nb).ratio(); ta,tb=set(na.split()),set(nb.split()); jac=len(ta&tb)/max(1,len(ta|tb))
  return .7*seq+.3*jac
 def fetch_catalog(base):
