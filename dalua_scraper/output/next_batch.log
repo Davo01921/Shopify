@@ -1,8 +1,10 @@
 {
-  "unpriced_safe_candidates": 121,
-  "variant_source_rows": 85,
-  "variant_families": 36,
-  "variant_rows_accounted_for": 85,
+  "unpriced_safe_candidates": 119,
+  "variant_source_rows": 87,
+  "variant_families": 33,
+  "safe_variant_families": 30,
+  "hold_variant_families": 3,
+  "variant_rows_accounted_for": 87,
   "shopify_writes": 0,
-  "next_gate": "expanded Australian market pricing + family duplicate audit"
+  "next_gate": "live Shopify duplicate audit of safe variant families"
 }

@@ -1,10 +1,10 @@
 {
-  "freshwater_candidate": 148,
-  "variant_group_review": 85,
+  "freshwater_candidate": 146,
+  "variant_group_review": 87,
   "duplicate_review": 72,
   "marine_review": 105,
   "manual_review": 6,
   "exclude": 2,
   "input_missing": 418,
-  "variant_families": 36
+  "variant_families": 33
 }
