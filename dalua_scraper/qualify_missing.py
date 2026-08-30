@@ -5,7 +5,9 @@ SRC=Path('dalua_scraper/output/dalua_shopify_reconciliation.csv'); OUT=Path('dal
 MARINE=('reef','coral','skimmer','reefer','wavemaker','wave maker','marine','saltwater','protein skimmer','filter sock','e-marco','marco rock','rms','red sea','coral essentials','fragger','frag rack','frag ')
 PROMO=('free ','price match','banner','free shipping',' discount')
 REVIEW=('pre-order','preorder','upgrade kit','return pump wifi','wave maker wifi')
-SIZE=re.compile(r'(?i)\b(\d+(?:\.\d+)?\s*(?:ml|l|g|kg|cm|mm|inch|inches|w|litre|litres)|small|medium|large|xl|xxl|black|grey|gray|pale|yellow|red|purple|blue|white)\b')
+# Keep compound size labels ahead of their component words so X-Small/X-Large
+# collapse into the same family as Small/Medium/Large rather than leaving a stray X.
+SIZE=re.compile(r'(?i)\b(\d+(?:\.\d+)?\s*(?:ml|l|g|kg|cm|mm|inch|inches|w|litre|litres)|x[\s-]*small|x[\s-]*large|xxl|xl|small|medium|large|black|grey|gray|pale|yellow|red|purple|blue|white)\b')
 def norm(s): return re.sub(r'\s+',' ',re.sub(r'[^a-z0-9]+',' ',s.lower())).strip()
 def family(title):
  s=SIZE.sub('',title); s=re.sub(r'\([^)]*\)',' ',s); return norm(s)
