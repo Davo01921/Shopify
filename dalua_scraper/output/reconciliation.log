@@ -1,4 +1,4 @@
-DALUA=477 Shopify published=2091
+DALUA=477 Shopify published=2097
 Compared 50/477
 Compared 100/477
 Compared 150/477
@@ -10,11 +10,11 @@ Compared 400/477
 Compared 450/477
 {
   "dalua_products": 477,
-  "shopify_published_products": 2091,
+  "shopify_published_products": 2097,
   "shopify_admin_vendor_dalua_count": 53,
-  "exact": 29,
-  "probable": 20,
-  "missing": 422,
+  "exact": 32,
+  "probable": 21,
+  "missing": 418,
   "exclude": 6,
   "probable_threshold": 0.82,
   "alias_rule": "leading Dalua / Dalua Fresh ignored for matching",

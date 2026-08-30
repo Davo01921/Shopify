@@ -1,7 +1,7 @@
 {
-  "input_candidates": 163,
-  "priced": 38,
-  "insufficient_market_data": 125,
+  "input_candidates": 148,
+  "priced": 27,
+  "insufficient_market_data": 121,
   "below_cost_review": 0,
   "retailers": {
     "DALUA AU": 719,
