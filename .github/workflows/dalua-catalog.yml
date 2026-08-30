@@ -29,8 +29,6 @@ jobs:
           cache: pip
           cache-dependency-path: dalua_scraper/requirements.txt
       - run: pip install -r dalua_scraper/requirements.txt
-      - name: Install Chromium
-        run: python -m playwright install --with-deps chromium
       - name: Scrape DALUA
         run: python dalua_scraper/browser_scraper.py
       - name: Validate catalogue
