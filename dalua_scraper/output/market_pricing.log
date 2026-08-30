@@ -4,8 +4,8 @@ IW Aquariums 2500
 Nature Aquariums 3016
 {
   "input_candidates": 163,
-  "priced": 29,
-  "insufficient_market_data": 132,
+  "priced": 37,
+  "insufficient_market_data": 124,
   "below_cost_review": 2,
   "retailers": {
     "DALUA AU": 719,
