@@ -11,6 +11,7 @@ on:
       - 'dalua_scraper/reconcile_shopify.py'
       - 'dalua_scraper/qualify_missing.py'
       - 'dalua_scraper/market_price.py'
+      - 'dalua_scraper/prepare_next_batch.py'
       - 'dalua_scraper/requirements.txt'
       - '.github/workflows/dalua-catalog.yml'
   schedule:
@@ -101,6 +102,23 @@ jobs:
           assert all((r['pricing_status']!='priced') or (int(r['market_observations'])>=2 and float(r['recommended_retail_aud'])>=float(r['dalua_cost_plus_gst'])) for r in rows)
           print('MARKET PRICING VALIDATED',s)
           PY
+      - name: Prepare next catalogue batch
+        id: next_batch
+        if: steps.market_validate.outcome == 'success'
+        continue-on-error: true
+        run: python dalua_scraper/prepare_next_batch.py 2>&1 | tee dalua_scraper/output/next_batch.log
+      - name: Validate next catalogue batch
+        id: next_batch_validate
+        if: steps.next_batch.outcome == 'success'
+        continue-on-error: true
+        run: |
+          python - <<'PY'
+          import csv,json
+          from pathlib import Path
+          p=Path('dalua_scraper/output'); s=json.loads((p/'next_batch_summary.json').read_text()); u=list(csv.DictReader((p/'dalua_next_125_unpriced.csv').open(encoding='utf-8-sig'))); v=list(csv.DictReader((p/'dalua_variant_family_manifest.csv').open(encoding='utf-8-sig')))
+          assert len(u)==s['unpriced_safe_candidates']; assert len(v)==s['variant_families']; assert s['variant_rows_accounted_for']<=s['variant_source_rows']; assert s['shopify_writes']==0
+          print('NEXT BATCH VALIDATED',s)
+          PY
       - name: Persist outputs and diagnostics
         if: always()
         run: |
@@ -108,8 +126,8 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -f dalua_scraper/output/
           git diff --cached --quiet && exit 0
-          git commit -m "Update DALUA reconciliation qualification and market pricing"
+          git commit -m "Update DALUA reconciliation qualification pricing and next batch"
           git push origin HEAD:codex/dalua-catalog-scraper
       - name: Enforce success
-        if: steps.scrape.outcome != 'success' || steps.validate.outcome != 'success' || steps.reconcile.outcome != 'success' || steps.reconcile_validate.outcome != 'success' || steps.qualify.outcome != 'success' || steps.qualify_validate.outcome != 'success' || steps.market_price.outcome != 'success' || steps.market_validate.outcome != 'success'
+        if: steps.scrape.outcome != 'success' || steps.validate.outcome != 'success' || steps.reconcile.outcome != 'success' || steps.reconcile_validate.outcome != 'success' || steps.qualify.outcome != 'success' || steps.qualify_validate.outcome != 'success' || steps.market_price.outcome != 'success' || steps.market_validate.outcome != 'success' || steps.next_batch.outcome != 'success' || steps.next_batch_validate.outcome != 'success'
         run: exit 1
