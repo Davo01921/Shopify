@@ -6,16 +6,15 @@ from pathlib import Path
 from urllib.parse import urlparse
 import xml.etree.ElementTree as ET
 import requests
-DALUA=Path('dalua_scraper/output/dalua_catalog.csv'); OUT=Path('dalua_scraper/output/dalua_shopify_reconciliation.csv'); SUMMARY=Path('dalua_scraper/output/reconciliation_summary.json')
-SHOP='https://nanotanksaustralia.com.au'; UA='Mozilla/5.0 (compatible; NTA-DALUA-Reconciliation/1.1)'
+BASEOUT=Path('dalua_scraper/output'); DALUA=BASEOUT/'dalua_catalog.csv'; OUT=BASEOUT/'dalua_shopify_reconciliation.csv'; SUMMARY=BASEOUT/'reconciliation_summary.json'
+SHOP='https://nanotanksaustralia.com.au'; UA='Mozilla/5.0 (compatible; NTA-DALUA-Reconciliation/1.2)'
 def norm(s):
  s=html.unescape(s or ''); s=unicodedata.normalize('NFKD',s).encode('ascii','ignore').decode().lower().replace('&',' and '); s=re.sub(r'[^a-z0-9]+',' ',s); return re.sub(r'\s+',' ',s).strip()
 def aliases(s):
- n=norm(s); out={n};
+ n=norm(s); out={n}
  if n.startswith('dalua '): out.add(n[6:])
  if n.startswith('dalua fresh '): out.add(n[6:]); out.add(n[12:])
  return {x for x in out if x}
-def tokens(s): return {x for x in norm(s).split() if len(x)>1}
 def similarity(a,b):
  best=0.0
  for na in aliases(a):
@@ -34,13 +33,15 @@ def discover(s):
  return products
 def exclusion(t,d):
  n=norm(t); dn=norm(d)
- if n.startswith('free ') or ' price match' in n or (('free ' in n) and ('buy ' in dn or 'for every ' in dn)): return 'supplier promotion/free item'
+ promo_terms=('free shipping','free new banner','plus free','price match')
+ if n.startswith('free ') or any(x in n for x in promo_terms) or ('free ' in n and ('buy ' in dn or 'for every ' in dn)): return 'supplier promotion/free item'
  return ''
+def write_rows(path,rows,fields):
+ with path.open('w',encoding='utf-8-sig',newline='') as f: w=csv.DictWriter(f,fieldnames=fields); w.writeheader(); w.writerows(rows)
 def main():
  s=requests.Session(); s.headers['User-Agent']=UA
  with DALUA.open(encoding='utf-8-sig',newline='') as f: dalua=list(csv.DictReader(f))
- shop=discover(s); print(f'DALUA={len(dalua)} Shopify published={len(shop)}')
- idx={}
+ shop=discover(s); print(f'DALUA={len(dalua)} Shopify published={len(shop)}'); idx={}
  for p in shop:
   for a in aliases(p['title']): idx.setdefault(a,[]).append(p)
  results=[]; counts={'exact':0,'probable':0,'missing':0,'exclude':0}
@@ -56,7 +57,7 @@ def main():
     if cls=='missing' and score<.60: best=None
   counts[cls]+=1; results.append({'classification':cls,'match_score':f'{score:.3f}','dalua_title':title,'dalua_cost_ex_gst':d.get('regular_cost_ex_gst',''),'dalua_cost_plus_gst':d.get('regular_cost_plus_gst',''),'dalua_markdown_ex_gst':d.get('markdown_cost_ex_gst',''),'dalua_markdown_plus_gst':d.get('markdown_cost_plus_gst',''),'dalua_product_url':d.get('product_page_url',''),'dalua_image_url':d.get('primary_image_url',''),'shopify_title':best['title'] if best else '','shopify_product_url':best['url'] if best else '','shopify_retail_price':'','exclude_reason':reason,'review_note':'manual review required' if cls=='probable' else ''})
   if i%50==0: print(f'Compared {i}/{len(dalua)}')
- OUT.parent.mkdir(parents=True,exist_ok=True)
- with OUT.open('w',encoding='utf-8-sig',newline='') as f: w=csv.DictWriter(f,fieldnames=list(results[0])); w.writeheader(); w.writerows(results)
+ BASEOUT.mkdir(parents=True,exist_ok=True); fields=list(results[0]); write_rows(OUT,results,fields)
+ for cls in ('exact','probable','missing','exclude'): write_rows(BASEOUT/f'dalua_shopify_{cls}.csv',[r for r in results if r['classification']==cls],fields)
  summary={'dalua_products':len(dalua),'shopify_published_products':len(shop),'shopify_admin_vendor_dalua_count':53,**counts,'probable_threshold':.82,'alias_rule':'leading Dalua / Dalua Fresh ignored for matching','generated_source':SHOP,'retail_price_enrichment':'deferred to matched products phase'}; SUMMARY.write_text(json.dumps(summary,indent=2),encoding='utf-8'); print(json.dumps(summary,indent=2)); return 0
 if __name__=='__main__': raise SystemExit(main())
