@@ -8,11 +8,15 @@ from urllib.parse import urljoin
 import requests
 SRC=Path('dalua_scraper/output/dalua_freshwater_candidates.csv'); OUT=Path('dalua_scraper/output')
 RETAILERS={'DALUA AU':'https://dalua.com.au','Nature Aquariums':'https://www.natureaquariums.com.au','Nature Pets':'https://naturepets.com.au','IW Aquariums':'https://iwaquariums.com.au'}
-UA='Mozilla/5.0 (compatible; NTA-Market-Pricing/1.3)'
+UA='Mozilla/5.0 (compatible; NTA-Market-Pricing/1.4)'
 SIZE_RE=re.compile(r'(?i)\b(\d+(?:\.\d+)?)\s*(ml|l|g|kg|cm|mm|w|inch|inches)\b')
-GENERIC={'wio','dalua','fresh','aquarium','aquariums','stone','stones','rock','rocks','nano','mega','box','set','kit','bag','river','riverbed','wood','boulder','boulders','the','and','of','for','with','per','kg','cm','mm','ml','litre','litres'}
-def norm(s): return re.sub(r'\s+',' ',re.sub(r'[^a-z0-9]+',' ',(s or '').lower())).strip()
-def sizes(s): return [(float(v),u.lower().replace('inches','inch')) for v,u in SIZE_RE.findall(s or '')]
+GENERIC={'wio','dalua','fresh','aquarium','aquariums','stone','stones','rock','rocks','nano','mega','box','set','bag','river','wood','boulder','boulders','the','and','of','for','with','per','kg','cm','mm','ml','litre','litres'}
+FORMS={'kit','riverbed','sand','soil','fertiliser','fertilizer','light','led','glue','pump','filter','diffuser','siphon','tweezers','substrate'}
+def canon(s):
+ s=(s or '').lower().replace('riverkit','river kit').replace('sliver shine','silver shine')
+ return s
+def norm(s): return re.sub(r'\s+',' ',re.sub(r'[^a-z0-9]+',' ',canon(s))).strip()
+def sizes(s): return [(float(v),u.lower().replace('inches','inch')) for v,u in SIZE_RE.findall(canon(s))]
 def sizes_compatible(a,b):
  sa,sb=sizes(a),sizes(b)
  if not sa or not sb:return True
@@ -23,19 +27,21 @@ def sizes_compatible(a,b):
    if ua=='kg' and max(va,vb)>=10 and abs(va-vb)<=1.1:return True
    if max(va,vb)>0 and abs(va-vb)/max(va,vb)<=0.03:return True
  return False
-def strip_sizes(s): return SIZE_RE.sub(' ',s or '')
-def model_tokens(s): return {t for t in norm(strip_sizes(s)).split() if len(t)>2 and t not in GENERIC and not t.isdigit()}
-def fuzzy_token_overlap(ma,mb):
+def strip_sizes(s): return SIZE_RE.sub(' ',canon(s))
+def model_tokens(s): return {t for t in norm(strip_sizes(s)).split() if len(t)>2 and t not in GENERIC and t not in FORMS and not t.isdigit()}
+def product_forms(s): return {t for t in norm(s).split() if t in FORMS}
+def forms_compatible(a,b):
+ fa,fb=product_forms(a),product_forms(b)
+ if not fa or not fb:return True
+ return bool(fa & fb)
+def model_overlap(ma,mb):
  if not ma:return 1.0
- hit=0
- for x in ma:
-  if any(x==y or SequenceMatcher(None,x,y).ratio()>=.78 for y in mb):hit+=1
- return hit/len(ma)
+ return len(ma&mb)/len(ma)
 def score(a,b):
  na,nb=norm(a),norm(b)
- if not na or not nb or not sizes_compatible(a,b):return 0.0
+ if not na or not nb or not sizes_compatible(a,b) or not forms_compatible(a,b):return 0.0
  ma,mb=model_tokens(a),model_tokens(b)
- if fuzzy_token_overlap(ma,mb)<0.5:return 0.0
+ if model_overlap(ma,mb)<0.5:return 0.0
  seq=SequenceMatcher(None,na,nb).ratio(); ta,tb=set(na.split()),set(nb.split()); jac=len(ta&tb)/max(1,len(ta|tb))
  return .7*seq+.3*jac
 def fetch_catalog(base):
