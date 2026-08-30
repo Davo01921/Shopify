@@ -2,8 +2,8 @@
 """Scrape DALUA Wholesale product data into CSV/JSON.
 
 Discovery is sitemap based so it does not depend on the site's product-table
-pagination. Prices are preserved as displayed and GST-inclusive values are
-calculated only when --prices-ex-gst is supplied.
+pagination. DALUA displayed wholesale prices are confirmed ex-GST; GST-inclusive
+values are therefore calculated at 10%.
 """
 from __future__ import annotations
 
@@ -111,7 +111,7 @@ def meta(soup: BeautifulSoup, prop: str) -> str:
     return (node.get("content") or "").strip() if node else ""
 
 
-def scrape_product(session: requests.Session, url: str, prices_ex_gst: bool) -> Product:
+def scrape_product(session: requests.Session, url: str) -> Product:
     from datetime import datetime, timezone
     p = Product(product_page_url=url, checked_at_utc=datetime.now(timezone.utc).isoformat())
     try:
@@ -135,13 +135,9 @@ def scrape_product(session: requests.Session, url: str, prices_ex_gst: bool) -> 
         if sale is not None and regular is not None and sale >= regular:
             sale = None
 
-        if prices_ex_gst:
-            p.regular_cost_ex_gst, p.regular_cost_plus_gst = fmt(regular), fmt(gst(regular))
-            p.markdown_cost_ex_gst, p.markdown_cost_plus_gst = fmt(sale), fmt(gst(sale))
-        else:
-            # Do not invent tax treatment: displayed prices go in +GST/display column
-            # until DALUA's tax convention is explicitly confirmed.
-            p.regular_cost_plus_gst, p.markdown_cost_plus_gst = fmt(regular), fmt(sale)
+        # DALUA wholesale prices are confirmed ex-GST. Always retain both values.
+        p.regular_cost_ex_gst, p.regular_cost_plus_gst = fmt(regular), fmt(gst(regular))
+        p.markdown_cost_ex_gst, p.markdown_cost_plus_gst = fmt(sale), fmt(gst(sale))
         if regular and sale and regular > 0:
             p.markdown_percent = fmt((regular-sale) / regular * Decimal("100"))
 
@@ -150,15 +146,18 @@ def scrape_product(session: requests.Session, url: str, prices_ex_gst: bool) -> 
 
         imgs: list[str] = []
         og = meta(soup, "og:image")
-        if og: imgs.append(urljoin(url, og))
+        if og:
+            imgs.append(urljoin(url, og))
         for a in soup.select(".woocommerce-product-gallery__image a[href]"):
             u = urljoin(url, a.get("href", ""))
-            if u and u not in imgs: imgs.append(u)
+            if u and u not in imgs:
+                imgs.append(u)
         for img in soup.select(".woocommerce-product-gallery img"):
             u = img.get("data-large_image") or img.get("src")
             if u:
                 u = urljoin(url, u)
-                if u not in imgs: imgs.append(u)
+                if u not in imgs:
+                    imgs.append(u)
         if imgs:
             p.primary_image_url = imgs[0]
             p.additional_image_urls = " | ".join(imgs[1:])
@@ -172,25 +171,37 @@ def main() -> int:
     ap.add_argument("--output-dir", default="dalua_scraper/output")
     ap.add_argument("--delay", type=float, default=0.35)
     ap.add_argument("--limit", type=int, default=0)
-    ap.add_argument("--prices-ex-gst", action="store_true", help="Only use after confirming DALUA displayed prices exclude GST")
     args = ap.parse_args()
-    out = Path(args.output_dir); out.mkdir(parents=True, exist_ok=True)
-    s = requests.Session(); s.headers.update({"User-Agent": UA, "Accept-Language": "en-AU,en;q=0.9"})
+    out = Path(args.output_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    s = requests.Session()
+    s.headers.update({"User-Agent": UA, "Accept-Language": "en-AU,en;q=0.9"})
     urls = discover(s)
-    if args.limit: urls = urls[:args.limit]
+    if args.limit:
+        urls = urls[:args.limit]
     print(f"Discovered {len(urls)} products")
     products = []
     for i, url in enumerate(urls, 1):
-        p = scrape_product(s, url, args.prices_ex_gst)
+        p = scrape_product(s, url)
         products.append(p)
         print(f"[{i}/{len(urls)}] {p.scrape_status}: {p.title or url}")
         time.sleep(args.delay)
     rows = [asdict(p) for p in products]
     fields = list(Product.__dataclass_fields__)
     with (out / "dalua_catalog.csv").open("w", newline="", encoding="utf-8-sig") as f:
-        w = csv.DictWriter(f, fieldnames=fields); w.writeheader(); w.writerows(rows)
+        w = csv.DictWriter(f, fieldnames=fields)
+        w.writeheader()
+        w.writerows(rows)
     (out / "dalua_catalog.json").write_text(json.dumps(rows, ensure_ascii=False, indent=2), encoding="utf-8")
-    summary = {"discovered": len(urls), "scraped_ok": sum(p.scrape_status == "ok" for p in products), "errors": sum(p.scrape_status != "ok" for p in products), "with_images": sum(bool(p.primary_image_url) for p in products), "with_markdown": sum(bool(p.markdown_cost_plus_gst) for p in products), "prices_ex_gst_assumed": args.prices_ex_gst}
+    summary = {
+        "discovered": len(urls),
+        "scraped_ok": sum(p.scrape_status == "ok" for p in products),
+        "errors": sum(p.scrape_status != "ok" for p in products),
+        "with_images": sum(bool(p.primary_image_url) for p in products),
+        "with_markdown": sum(bool(p.markdown_cost_plus_gst) for p in products),
+        "prices_ex_gst_confirmed": True,
+        "gst_rate": "10%",
+    }
     (out / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
     print(json.dumps(summary, indent=2))
     return 1 if summary["errors"] else 0
