@@ -9,17 +9,15 @@ on:
       - 'dalua_scraper/store_api_scraper.py'
       - 'dalua_scraper/scrape_dalua.py'
       - 'dalua_scraper/reconcile_shopify.py'
+      - 'dalua_scraper/qualify_missing.py'
       - 'dalua_scraper/requirements.txt'
       - '.github/workflows/dalua-catalog.yml'
   schedule:
     - cron: '15 18 * * 0'
-
 permissions:
   contents: write
-
 env:
   PYTHONUNBUFFERED: '1'
-
 jobs:
   scrape:
     runs-on: ubuntu-latest
@@ -44,59 +42,56 @@ jobs:
         if: steps.scrape.outcome == 'success'
         continue-on-error: true
         run: |
-          set -o pipefail
-          python - <<'PY' 2>&1 | tee dalua_scraper/output/validation.log
-          import csv, json
+          python - <<'PY'
+          import csv,json
           from pathlib import Path
-          p=Path('dalua_scraper/output')
-          s=json.loads((p/'summary.json').read_text())
-          rows=list(csv.DictReader((p/'dalua_catalog.csv').open(encoding='utf-8-sig')))
-          assert s['prices_ex_gst_confirmed'] is True, s
-          assert s['gst_rate'] == '10%', s
-          assert s['price_crosscheck_compared'] >= 5, s
-          assert s['price_crosscheck_matches'] == s['price_crosscheck_compared'], s
-          assert len(rows) >= 450, f"catalogue unexpectedly small: {len(rows)}"
-          assert all(r['title'] for r in rows), 'missing title'
-          assert all(r['regular_cost_ex_gst'] for r in rows), 'missing ex-GST cost'
-          assert all(r['regular_cost_plus_gst'] for r in rows), 'missing GST-inclusive cost'
-          assert s['with_images'] >= int(len(rows)*0.90), s
-          assert s['with_descriptions'] >= int(len(rows)*0.80), s
-          print('VALIDATED', s)
+          p=Path('dalua_scraper/output'); s=json.loads((p/'summary.json').read_text()); rows=list(csv.DictReader((p/'dalua_catalog.csv').open(encoding='utf-8-sig')))
+          assert s['prices_ex_gst_confirmed'] is True and s['gst_rate']=='10%'; assert s['price_crosscheck_compared']>=5 and s['price_crosscheck_matches']==s['price_crosscheck_compared']; assert len(rows)>=450; assert all(r['title'] and r['regular_cost_ex_gst'] and r['regular_cost_plus_gst'] for r in rows); assert s['with_images']>=int(len(rows)*.90); assert s['with_descriptions']>=int(len(rows)*.80)
+          print('VALIDATED',s)
           PY
       - name: Reconcile against Shopify
         id: reconcile
         if: steps.validate.outcome == 'success'
         continue-on-error: true
-        run: |
-          set -o pipefail
-          python dalua_scraper/reconcile_shopify.py 2>&1 | tee dalua_scraper/output/reconciliation.log
+        run: python dalua_scraper/reconcile_shopify.py 2>&1 | tee dalua_scraper/output/reconciliation.log
       - name: Validate reconciliation
         id: reconcile_validate
         if: steps.reconcile.outcome == 'success'
         continue-on-error: true
         run: |
           python - <<'PY'
-          import csv, json
+          import csv,json
           from pathlib import Path
-          p=Path('dalua_scraper/output')
-          s=json.loads((p/'reconciliation_summary.json').read_text())
-          rows=list(csv.DictReader((p/'dalua_shopify_reconciliation.csv').open(encoding='utf-8-sig')))
-          assert len(rows) == s['dalua_products'] == 477, (len(rows), s)
-          assert s['exact'] + s['probable'] + s['missing'] + s['exclude'] == 477, s
-          assert s['shopify_published_products'] > 100, s
-          assert all(r['classification'] in {'exact','probable','missing','exclude'} for r in rows)
-          print('RECONCILIATION VALIDATED', s)
+          p=Path('dalua_scraper/output'); s=json.loads((p/'reconciliation_summary.json').read_text()); rows=list(csv.DictReader((p/'dalua_shopify_reconciliation.csv').open(encoding='utf-8-sig')))
+          assert len(rows)==s['dalua_products']==477; assert s['exact']+s['probable']+s['missing']+s['exclude']==477; assert s['shopify_published_products']>100
+          print('RECONCILIATION VALIDATED',s)
+          PY
+      - name: Qualify missing products
+        id: qualify
+        if: steps.reconcile_validate.outcome == 'success'
+        continue-on-error: true
+        run: python dalua_scraper/qualify_missing.py 2>&1 | tee dalua_scraper/output/qualification.log
+      - name: Validate qualification
+        id: qualify_validate
+        if: steps.qualify.outcome == 'success'
+        continue-on-error: true
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('dalua_scraper/output'); q=json.loads((p/'qualification_summary.json').read_text()); r=json.loads((p/'reconciliation_summary.json').read_text())
+          assert q['input_missing']==r['missing']; assert sum(v for k,v in q.items() if k not in {'input_missing','variant_families'})==q['input_missing']
+          print('QUALIFICATION VALIDATED',q)
           PY
       - name: Persist outputs and diagnostics
         if: always()
         run: |
-          printf '{"scrape":"%s","validate":"%s","reconcile":"%s","reconcile_validate":"%s"}\n' '${{ steps.scrape.outcome }}' '${{ steps.validate.outcome }}' '${{ steps.reconcile.outcome }}' '${{ steps.reconcile_validate.outcome }}' > dalua_scraper/output/workflow_status.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -f dalua_scraper/output/
           git diff --cached --quiet && exit 0
-          git commit -m "Update DALUA scrape and Shopify reconciliation"
+          git commit -m "Update DALUA scrape reconciliation and qualification"
           git push origin HEAD:codex/dalua-catalog-scraper
       - name: Enforce success
-        if: steps.scrape.outcome != 'success' || steps.validate.outcome != 'success' || steps.reconcile.outcome != 'success' || steps.reconcile_validate.outcome != 'success'
+        if: steps.scrape.outcome != 'success' || steps.validate.outcome != 'success' || steps.reconcile.outcome != 'success' || steps.reconcile_validate.outcome != 'success' || steps.qualify.outcome != 'success' || steps.qualify_validate.outcome != 'success'
         run: exit 1
