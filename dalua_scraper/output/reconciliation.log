@@ -1,4 +1,4 @@
-DALUA=477 Shopify published=2090
+DALUA=477 Shopify published=2091
 Compared 50/477
 Compared 100/477
 Compared 150/477
@@ -10,12 +10,14 @@ Compared 400/477
 Compared 450/477
 {
   "dalua_products": 477,
-  "shopify_published_products": 2090,
-  "exact": 6,
-  "probable": 40,
-  "missing": 427,
+  "shopify_published_products": 2091,
+  "shopify_admin_vendor_dalua_count": 53,
+  "exact": 29,
+  "probable": 20,
+  "missing": 424,
   "exclude": 4,
   "probable_threshold": 0.82,
+  "alias_rule": "leading Dalua / Dalua Fresh ignored for matching",
   "generated_source": "https://nanotanksaustralia.com.au",
   "retail_price_enrichment": "deferred to matched products phase"
 }
