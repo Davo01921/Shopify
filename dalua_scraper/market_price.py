@@ -7,8 +7,8 @@ from pathlib import Path
 from urllib.parse import urljoin
 import requests
 SRC=Path('dalua_scraper/output/dalua_freshwater_candidates.csv'); OUT=Path('dalua_scraper/output')
-RETAILERS={'DALUA AU':'https://dalua.com.au','Nature Aquariums':'https://www.natureaquariums.com.au','Nature Pets':'https://naturepets.com.au','IW Aquariums':'https://iwaquariums.com.au'}
-UA='Mozilla/5.0 (compatible; NTA-Market-Pricing/1.4)'
+RETAILERS={'DALUA AU':'https://dalua.com.au','Nature Aquariums':'https://www.natureaquariums.com.au','Nature Pets':'https://naturepets.com.au','IW Aquariums':'https://iwaquariums.com.au','The Tech Den':'https://www.thetechden.com.au'}
+UA='Mozilla/5.0 (compatible; NTA-Market-Pricing/1.5)'
 SIZE_RE=re.compile(r'(?i)\b(\d+(?:\.\d+)?)\s*(ml|l|g|kg|cm|mm|w|inch|inches)\b')
 GENERIC={'wio','dalua','fresh','aquarium','aquariums','stone','stones','rock','rocks','nano','mega','box','set','bag','river','wood','boulder','boulders','the','and','of','for','with','per','kg','cm','mm','ml','litre','litres'}
 FORMS={'kit','riverbed','sand','soil','fertiliser','fertilizer','light','led','glue','pump','filter','diffuser','siphon','tweezers','substrate'}
