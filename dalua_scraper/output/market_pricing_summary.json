@@ -1,8 +1,8 @@
 {
   "input_candidates": 163,
-  "priced": 37,
-  "insufficient_market_data": 124,
-  "below_cost_review": 2,
+  "priced": 38,
+  "insufficient_market_data": 125,
+  "below_cost_review": 0,
   "retailers": {
     "DALUA AU": 719,
     "Nature Pets": 1278,
