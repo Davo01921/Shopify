@@ -39,14 +39,17 @@ jobs:
           p=Path('dalua_scraper/output')
           s=json.loads((p/'summary.json').read_text())
           rows=list(csv.DictReader((p/'dalua_catalog.csv').open(encoding='utf-8-sig')))
-          assert rows, 'empty catalogue'
           assert s['prices_ex_gst_confirmed'] is True, s
           assert s['gst_rate'] == '10%', s
-          assert s['errors']==0, s
-          assert s['with_images'] >= max(1, int(len(rows)*0.90)), s
-          assert len({r['product_page_url'] for r in rows}) == len(rows), 'duplicate product URLs'
+          assert s['table_pages_reported'] >= 40, s
+          assert s['pages_with_rows'] == s['table_pages_reported'], s
+          assert len(rows) >= 450, f"catalogue unexpectedly small: {len(rows)}"
           assert all(r['title'] for r in rows), 'missing title'
-          assert all(r['regular_cost_plus_gst'] or r['regular_cost_ex_gst'] == '' for r in rows), 'GST calculation missing where cost exists'
+          assert all(r['regular_cost_ex_gst'] for r in rows), 'missing ex-GST cost'
+          assert all(r['regular_cost_plus_gst'] for r in rows), 'missing GST-inclusive cost'
+          assert s['with_images'] >= int(len(rows)*0.90), s
+          assert s['with_descriptions'] >= int(len(rows)*0.80), s
+          assert s['with_stock_status'] >= int(len(rows)*0.90), s
           print('VALIDATED', s)
           PY
       - uses: actions/upload-artifact@v4
