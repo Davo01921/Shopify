@@ -9,6 +9,7 @@ against the first public table page before the full export is accepted.
 from __future__ import annotations
 
 import csv
+import html as html_lib
 import json
 import re
 from dataclasses import asdict
@@ -21,10 +22,14 @@ import requests
 import scrape_dalua as core
 
 API = f"{core.BASE}/wp-json/wc/store/v1/products"
+SHORTCODE = re.compile(r"\[/?[A-Za-z0-9_:-]+(?:\s+[^\]]*)?\]")
 
 
 def plain(html: str | None) -> str:
-    return BeautifulSoup(html or "", "lxml").get_text(" ", strip=True)
+    text = BeautifulSoup(html or "", "lxml").get_text(" ", strip=True)
+    text = SHORTCODE.sub(" ", text)
+    text = html_lib.unescape(text)
+    return re.sub(r"\s+", " ", text).strip()
 
 
 def decimal_price(raw: str | int | None, minor_unit: int) -> Decimal | None:
@@ -44,8 +49,6 @@ def api_product(item: dict) -> core.Product:
     sale = decimal_price(prices.get("sale_price"), minor)
     current = decimal_price(prices.get("price"), minor)
 
-    # If Woo reports no distinct regular price, use current. Only populate
-    # markdown when sale is genuinely below regular.
     if regular is None:
         regular = current
     if sale is None or regular is None or sale >= regular:
@@ -55,7 +58,7 @@ def api_product(item: dict) -> core.Product:
     stock_status = str(item.get("stock_status") or "").replace("instock", "In stock").replace("outofstock", "Out of stock").replace("onbackorder", "On backorder")
 
     p = core.Product(
-        title=str(item.get("name") or "").strip(),
+        title=html_lib.unescape(str(item.get("name") or "").strip()),
         description=plain(item.get("short_description") or item.get("description")),
         regular_cost_ex_gst=core.fmt(regular),
         regular_cost_plus_gst=core.fmt(core.gst(regular)),
