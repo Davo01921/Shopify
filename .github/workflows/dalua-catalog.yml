@@ -30,7 +30,7 @@ jobs:
           cache-dependency-path: dalua_scraper/requirements.txt
       - run: pip install -r dalua_scraper/requirements.txt
       - name: Scrape DALUA
-        run: python dalua_scraper/scrape_dalua.py
+        run: python dalua_scraper/run_scraper.py
       - name: Validate catalogue
         run: |
           python - <<'PY'
