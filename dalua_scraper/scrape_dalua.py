@@ -11,8 +11,10 @@ import argparse
 import csv
 import json
 import re
+import threading
 import time
 import xml.etree.ElementTree as ET
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict, dataclass
 from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 from pathlib import Path
@@ -24,6 +26,7 @@ from bs4 import BeautifulSoup
 BASE = "https://daluawholesale.com.au"
 UA = "Mozilla/5.0 (compatible; NTA-DALUA-Catalog/1.0; +catalog-audit)"
 MONEY = re.compile(r"([0-9]+(?:\.[0-9]{1,2})?)")
+_thread_local = threading.local()
 
 @dataclass
 class Product:
@@ -40,6 +43,20 @@ class Product:
     additional_image_urls: str = ""
     checked_at_utc: str = ""
     scrape_status: str = "ok"
+
+
+def new_session() -> requests.Session:
+    s = requests.Session()
+    s.headers.update({"User-Agent": UA, "Accept-Language": "en-AU,en;q=0.9"})
+    return s
+
+
+def worker_session() -> requests.Session:
+    s = getattr(_thread_local, "session", None)
+    if s is None:
+        s = new_session()
+        _thread_local.session = s
+    return s
 
 
 def money(text: str | None) -> Decimal | None:
@@ -127,7 +144,8 @@ def scrape_product(session: requests.Session, url: str) -> Product:
             del_node = price_box.select_one("del")
             ins_node = price_box.select_one("ins")
             if del_node and ins_node:
-                regular, sale = money(del_node.get_text(" ", strip=True)), money(ins_node.get_text(" ", strip=True))
+                regular = money(del_node.get_text(" ", strip=True))
+                sale = money(ins_node.get_text(" ", strip=True))
             else:
                 regular = money(price_box.get_text(" ", strip=True))
         if regular is None:
@@ -135,7 +153,6 @@ def scrape_product(session: requests.Session, url: str) -> Product:
         if sale is not None and regular is not None and sale >= regular:
             sale = None
 
-        # DALUA wholesale prices are confirmed ex-GST. Always retain both values.
         p.regular_cost_ex_gst, p.regular_cost_plus_gst = fmt(regular), fmt(gst(regular))
         p.markdown_cost_ex_gst, p.markdown_cost_plus_gst = fmt(sale), fmt(gst(sale))
         if regular and sale and regular > 0:
@@ -166,26 +183,41 @@ def scrape_product(session: requests.Session, url: str) -> Product:
     return p
 
 
+def scrape_url(url: str) -> Product:
+    return scrape_product(worker_session(), url)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--output-dir", default="dalua_scraper/output")
-    ap.add_argument("--delay", type=float, default=0.35)
     ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument("--workers", type=int, default=6, help="Bounded concurrent requests; keep modest to avoid stressing supplier site")
     args = ap.parse_args()
+    if args.workers < 1 or args.workers > 10:
+        ap.error("--workers must be between 1 and 10")
+
     out = Path(args.output_dir)
     out.mkdir(parents=True, exist_ok=True)
-    s = requests.Session()
-    s.headers.update({"User-Agent": UA, "Accept-Language": "en-AU,en;q=0.9"})
-    urls = discover(s)
+    urls = discover(new_session())
     if args.limit:
         urls = urls[:args.limit]
-    print(f"Discovered {len(urls)} products")
-    products = []
-    for i, url in enumerate(urls, 1):
-        p = scrape_product(s, url)
-        products.append(p)
-        print(f"[{i}/{len(urls)}] {p.scrape_status}: {p.title or url}")
-        time.sleep(args.delay)
+    print(f"Discovered {len(urls)} products; scraping with {args.workers} workers")
+
+    by_url: dict[str, Product] = {}
+    with ThreadPoolExecutor(max_workers=args.workers) as pool:
+        futures = {pool.submit(scrape_url, url): url for url in urls}
+        completed = 0
+        for future in as_completed(futures):
+            url = futures[future]
+            try:
+                p = future.result()
+            except Exception as e:
+                p = Product(product_page_url=url, scrape_status=f"error: {e}")
+            by_url[url] = p
+            completed += 1
+            print(f"[{completed}/{len(urls)}] {p.scrape_status}: {p.title or url}")
+
+    products = [by_url[url] for url in urls]
     rows = [asdict(p) for p in products]
     fields = list(Product.__dataclass_fields__)
     with (out / "dalua_catalog.csv").open("w", newline="", encoding="utf-8-sig") as f:
@@ -201,6 +233,7 @@ def main() -> int:
         "with_markdown": sum(bool(p.markdown_cost_plus_gst) for p in products),
         "prices_ex_gst_confirmed": True,
         "gst_rate": "10%",
+        "workers": args.workers,
     }
     (out / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
     print(json.dumps(summary, indent=2))
