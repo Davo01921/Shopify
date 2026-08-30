@@ -4,10 +4,10 @@
   "insufficient_market_data": 119,
   "below_cost_review": 0,
   "retailers": {
-    "DALUA AU": 719,
     "Nature Pets": 1278,
+    "DALUA AU": 719,
     "IW Aquariums": 2500,
-    "The Tech Den": 2511,
-    "Nature Aquariums": 3016
+    "Nature Aquariums": 3016,
+    "The Tech Den": 2511
   }
 }
