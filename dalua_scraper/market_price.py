@@ -8,10 +8,11 @@ from urllib.parse import urljoin
 import requests
 SRC=Path('dalua_scraper/output/dalua_freshwater_candidates.csv'); OUT=Path('dalua_scraper/output')
 RETAILERS={'DALUA AU':'https://dalua.com.au','Nature Aquariums':'https://www.natureaquariums.com.au','Nature Pets':'https://naturepets.com.au','IW Aquariums':'https://iwaquariums.com.au','The Tech Den':'https://www.thetechden.com.au'}
-UA='Mozilla/5.0 (compatible; NTA-Market-Pricing/1.5)'
+UA='Mozilla/5.0 (compatible; NTA-Market-Pricing/1.6)'
 SIZE_RE=re.compile(r'(?i)\b(\d+(?:\.\d+)?)\s*(ml|l|g|kg|cm|mm|w|inch|inches)\b')
 GENERIC={'wio','dalua','fresh','aquarium','aquariums','stone','stones','rock','rocks','nano','mega','box','set','bag','river','wood','boulder','boulders','the','and','of','for','with','per','kg','cm','mm','ml','litre','litres'}
-FORMS={'kit','riverbed','sand','soil','fertiliser','fertilizer','light','led','glue','pump','filter','diffuser','siphon','tweezers','substrate'}
+FORMS={'kit','riverbed','sand','soil','fertiliser','fertilizer','light','led','glue','pump','filter','diffuser','siphon','tweezers','substrate','florabed'}
+GRADE_TOKENS={'fine','thick','coarse','powder'}
 def canon(s):
  s=(s or '').lower().replace('riverkit','river kit').replace('sliver shine','silver shine')
  return s
@@ -34,12 +35,25 @@ def forms_compatible(a,b):
  fa,fb=product_forms(a),product_forms(b)
  if not fa or not fb:return True
  return bool(fa & fb)
+def grade(s):
+ t=set(norm(s).split())
+ if 'fine' in t:return 'fine'
+ if 'thick' in t or 'coarse' in t:return 'thick'
+ if 'powder' in t:return 'powder'
+ # Florabed with no explicit grade is treated as standard/unknown, never Fine/Thick.
+ if 'florabed' in t:return 'standard'
+ return None
+def grades_compatible(a,b):
+ ga,gb=grade(a),grade(b)
+ if ga is None and gb is None:return True
+ if ga is None or gb is None:return False
+ return ga==gb
 def model_overlap(ma,mb):
  if not ma:return 1.0
  return len(ma&mb)/len(ma)
 def score(a,b):
  na,nb=norm(a),norm(b)
- if not na or not nb or not sizes_compatible(a,b) or not forms_compatible(a,b):return 0.0
+ if not na or not nb or not sizes_compatible(a,b) or not forms_compatible(a,b) or not grades_compatible(a,b):return 0.0
  ma,mb=model_tokens(a),model_tokens(b)
  if model_overlap(ma,mb)<0.5:return 0.0
  seq=SequenceMatcher(None,na,nb).ratio(); ta,tb=set(na.split()),set(nb.split()); jac=len(ta&tb)/max(1,len(ta|tb))
