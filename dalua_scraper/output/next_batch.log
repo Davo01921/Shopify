@@ -1,0 +1,10 @@
+{
+  "unpriced_safe_candidates": 119,
+  "variant_source_rows": 87,
+  "variant_families": 33,
+  "safe_variant_families": 30,
+  "hold_variant_families": 3,
+  "variant_rows_accounted_for": 87,
+  "shopify_writes": 0,
+  "next_gate": "live Shopify duplicate audit of safe variant families"
+}

@@ -1,0 +1,154 @@
+name: DALUA catalogue scrape
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - codex/dalua-catalog-scraper
+    paths:
+      - 'dalua_scraper/store_api_scraper.py'
+      - 'dalua_scraper/scrape_dalua.py'
+      - 'dalua_scraper/reconcile_shopify.py'
+      - 'dalua_scraper/qualify_missing.py'
+      - 'dalua_scraper/market_price.py'
+      - 'dalua_scraper/prepare_next_batch.py'
+      - 'dalua_scraper/price_variant_families.py'
+      - 'dalua_scraper/requirements.txt'
+      - '.github/workflows/dalua-catalog.yml'
+  schedule:
+    - cron: '15 18 * * 0'
+permissions:
+  contents: write
+env:
+  PYTHONUNBUFFERED: '1'
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/dalua-catalog-scraper
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r dalua_scraper/requirements.txt
+      - name: Scrape DALUA
+        id: scrape
+        continue-on-error: true
+        run: |
+          mkdir -p dalua_scraper/output
+          python dalua_scraper/store_api_scraper.py 2>&1 | tee dalua_scraper/output/run.log
+      - name: Validate catalogue
+        id: validate
+        if: steps.scrape.outcome == 'success'
+        continue-on-error: true
+        run: |
+          python - <<'PY'
+          import csv,json
+          from pathlib import Path
+          p=Path('dalua_scraper/output'); s=json.loads((p/'summary.json').read_text()); rows=list(csv.DictReader((p/'dalua_catalog.csv').open(encoding='utf-8-sig')))
+          assert s['prices_ex_gst_confirmed'] is True and s['gst_rate']=='10%'; assert s['price_crosscheck_compared']>=5 and s['price_crosscheck_matches']==s['price_crosscheck_compared']; assert len(rows)>=450; assert all(r['title'] and r['regular_cost_ex_gst'] and r['regular_cost_plus_gst'] for r in rows)
+          print('VALIDATED',s)
+          PY
+      - name: Reconcile against Shopify
+        id: reconcile
+        if: steps.validate.outcome == 'success'
+        continue-on-error: true
+        run: python dalua_scraper/reconcile_shopify.py 2>&1 | tee dalua_scraper/output/reconciliation.log
+      - name: Validate reconciliation
+        id: reconcile_validate
+        if: steps.reconcile.outcome == 'success'
+        continue-on-error: true
+        run: |
+          python - <<'PY'
+          import csv,json
+          from pathlib import Path
+          p=Path('dalua_scraper/output'); s=json.loads((p/'reconciliation_summary.json').read_text()); rows=list(csv.DictReader((p/'dalua_shopify_reconciliation.csv').open(encoding='utf-8-sig')))
+          assert len(rows)==s['dalua_products']==477; assert s['exact']+s['probable']+s['missing']+s['exclude']==477
+          print('RECONCILIATION VALIDATED',s)
+          PY
+      - name: Qualify missing products
+        id: qualify
+        if: steps.reconcile_validate.outcome == 'success'
+        continue-on-error: true
+        run: python dalua_scraper/qualify_missing.py 2>&1 | tee dalua_scraper/output/qualification.log
+      - name: Validate qualification
+        id: qualify_validate
+        if: steps.qualify.outcome == 'success'
+        continue-on-error: true
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('dalua_scraper/output'); q=json.loads((p/'qualification_summary.json').read_text()); r=json.loads((p/'reconciliation_summary.json').read_text())
+          assert q['input_missing']==r['missing']; assert sum(v for k,v in q.items() if k not in {'input_missing','variant_families'})==q['input_missing']
+          print('QUALIFICATION VALIDATED',q)
+          PY
+      - name: Price freshwater candidates
+        id: market_price
+        if: steps.qualify_validate.outcome == 'success'
+        continue-on-error: true
+        run: python dalua_scraper/market_price.py 2>&1 | tee dalua_scraper/output/market_pricing.log
+      - name: Validate market pricing
+        id: market_validate
+        if: steps.market_price.outcome == 'success'
+        continue-on-error: true
+        run: |
+          python - <<'PY'
+          import csv,json
+          from pathlib import Path
+          p=Path('dalua_scraper/output'); s=json.loads((p/'market_pricing_summary.json').read_text()); rows=list(csv.DictReader((p/'dalua_market_pricing.csv').open(encoding='utf-8-sig')))
+          assert len(rows)==s['input_candidates']; assert s['priced']+s['insufficient_market_data']+s['below_cost_review']==s['input_candidates']
+          assert all((r['pricing_status']!='priced') or (int(r['market_observations'])>=2 and float(r['recommended_retail_aud'])>=float(r['dalua_cost_plus_gst'])) for r in rows)
+          print('MARKET PRICING VALIDATED',s)
+          PY
+      - name: Prepare next catalogue batch
+        id: next_batch
+        if: steps.market_validate.outcome == 'success'
+        continue-on-error: true
+        run: python dalua_scraper/prepare_next_batch.py 2>&1 | tee dalua_scraper/output/next_batch.log
+      - name: Validate next catalogue batch
+        id: next_batch_validate
+        if: steps.next_batch.outcome == 'success'
+        continue-on-error: true
+        run: |
+          python - <<'PY'
+          import csv,json
+          from pathlib import Path
+          p=Path('dalua_scraper/output'); s=json.loads((p/'next_batch_summary.json').read_text()); u=list(csv.DictReader((p/'dalua_next_125_unpriced.csv').open(encoding='utf-8-sig'))); v=list(csv.DictReader((p/'dalua_variant_family_manifest.csv').open(encoding='utf-8-sig')))
+          assert len(u)==s['unpriced_safe_candidates']; assert len(v)==s['variant_families']; assert s['variant_rows_accounted_for']<=s['variant_source_rows']; assert s['shopify_writes']==0
+          print('NEXT BATCH VALIDATED',s)
+          PY
+      - name: Price safe variant families
+        id: variant_price
+        if: steps.next_batch_validate.outcome == 'success'
+        continue-on-error: true
+        run: python dalua_scraper/price_variant_families.py 2>&1 | tee dalua_scraper/output/variant_pricing.log
+      - name: Validate variant pricing
+        id: variant_price_validate
+        if: steps.variant_price.outcome == 'success'
+        continue-on-error: true
+        run: |
+          python - <<'PY'
+          import csv,json
+          from pathlib import Path
+          p=Path('dalua_scraper/output'); s=json.loads((p/'variant_pricing_summary.json').read_text()); rows=list(csv.DictReader((p/'dalua_variant_family_pricing.csv').open(encoding='utf-8-sig')))
+          assert len(rows)==s['families']; assert s['families']==30; assert s['variants']==sum(int(r['source_rows']) for r in rows); assert s['shopify_writes']==0
+          for r in rows:
+            for x in json.loads(r['priced_options_json']):
+              if x['pricing_status']=='priced': assert int(x['market_observations'])>=2 and float(x['recommended_retail_aud'])>=float(x['cost_plus_gst'])
+          print('VARIANT PRICING VALIDATED',s)
+          PY
+      - name: Persist outputs and diagnostics
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f dalua_scraper/output/
+          git diff --cached --quiet && exit 0
+          git commit -m "Update DALUA reconciliation qualification pricing and variant families"
+          git push origin HEAD:codex/dalua-catalog-scraper
+      - name: Enforce success
+        if: steps.scrape.outcome != 'success' || steps.validate.outcome != 'success' || steps.reconcile.outcome != 'success' || steps.reconcile_validate.outcome != 'success' || steps.qualify.outcome != 'success' || steps.qualify_validate.outcome != 'success' || steps.market_price.outcome != 'success' || steps.market_validate.outcome != 'success' || steps.next_batch.outcome != 'success' || steps.next_batch_validate.outcome != 'success' || steps.variant_price.outcome != 'success' || steps.variant_price_validate.outcome != 'success'
+        run: exit 1

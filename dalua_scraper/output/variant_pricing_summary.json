@@ -1,0 +1,16 @@
+{
+  "families": 30,
+  "fully_priced_families": 8,
+  "partial_or_unpriced_families": 22,
+  "review_families": 0,
+  "variants": 77,
+  "priced_variants": 16,
+  "retailers": {
+    "DALUA AU": 719,
+    "Nature Pets": 1278,
+    "IW Aquariums": 2500,
+    "The Tech Den": 2511,
+    "Nature Aquariums": 3016
+  },
+  "shopify_writes": 0
+}
