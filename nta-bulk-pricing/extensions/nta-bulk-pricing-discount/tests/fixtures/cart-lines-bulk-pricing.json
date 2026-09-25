@@ -1,0 +1,148 @@
+{
+  "payload": {
+    "export": "cart_lines_discounts_generate_run",
+    "target": "cart.lines.discounts.generate.run",
+    "input": {
+      "cart": {
+        "lines": [
+          {
+            "id": "gid://shopify/CartLine/pea",
+            "quantity": 3,
+            "merchandise": {
+              "__typename": "ProductVariant",
+              "id": "gid://shopify/ProductVariant/pea",
+              "product": {
+                "id": "gid://shopify/Product/pea",
+                "collectionMemberships": [
+                  {
+                    "collectionId": "gid://shopify/Collection/fish",
+                    "isMember": true
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": "gid://shopify/CartLine/frozen",
+            "quantity": 20,
+            "merchandise": {
+              "__typename": "ProductVariant",
+              "id": "gid://shopify/ProductVariant/frozen",
+              "product": {
+                "id": "gid://shopify/Product/frozen",
+                "collectionMemberships": []
+              }
+            }
+          }
+        ]
+      },
+      "discount": {
+        "discountClasses": ["PRODUCT"],
+        "metafield": {
+          "jsonValue": {
+            "version": 1,
+            "collectionIds": ["gid://shopify/Collection/fish"],
+            "rules": [
+              {
+                "id": "schooling-fish",
+                "title": "GROUP FISH DISCOUNTS",
+                "enabled": true,
+                "priority": 0,
+                "target": {
+                  "type": "COLLECTIONS",
+                  "ids": ["gid://shopify/Collection/fish"]
+                },
+                "tiers": [
+                  {
+                    "id": "three",
+                    "min": 3,
+                    "max": null,
+                    "discount": { "type": "PERCENTAGE", "value": 5 }
+                  }
+                ]
+              },
+              {
+                "id": "pea-puffer",
+                "title": "Pea Puffers",
+                "enabled": true,
+                "priority": 0,
+                "target": {
+                  "type": "PRODUCT",
+                  "ids": ["gid://shopify/Product/pea"]
+                },
+                "tiers": [
+                  {
+                    "id": "three",
+                    "min": 3,
+                    "max": null,
+                    "discount": { "type": "PERCENTAGE", "value": 6 }
+                  }
+                ]
+              },
+              {
+                "id": "frozen-food",
+                "title": "FROZEN FOODS",
+                "enabled": true,
+                "priority": 0,
+                "target": {
+                  "type": "PRODUCTS",
+                  "ids": ["gid://shopify/Product/frozen"]
+                },
+                "tiers": [
+                  {
+                    "id": "twenty",
+                    "min": 20,
+                    "max": null,
+                    "discount": { "type": "FIXED_PER_ITEM", "value": 1 }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "output": {
+      "operations": [
+        {
+          "productDiscountsAdd": {
+            "candidates": [
+              {
+                "targets": [
+                  {
+                    "cartLine": {
+                      "id": "gid://shopify/CartLine/pea"
+                    }
+                  }
+                ],
+                "message": "Pea Puffers",
+                "value": {
+                  "percentage": {
+                    "value": "6.0"
+                  }
+                }
+              },
+              {
+                "targets": [
+                  {
+                    "cartLine": {
+                      "id": "gid://shopify/CartLine/frozen"
+                    }
+                  }
+                ],
+                "message": "FROZEN FOODS",
+                "value": {
+                  "fixedAmount": {
+                    "amount": "1.0",
+                    "appliesToEachItem": true
+                  }
+                }
+              }
+            ],
+            "selectionStrategy": "ALL"
+          }
+        }
+      ]
+    }
+  }
+}

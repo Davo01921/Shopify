@@ -1,0 +1,18 @@
+{
+  "payload": {
+    "export": "cart_lines_discounts_generate_run",
+    "target": "cart.lines.discounts.generate.run",
+    "input": {
+      "cart": {
+        "lines": []
+      },
+      "discount": {
+        "discountClasses": ["PRODUCT"],
+        "metafield": null
+      }
+    },
+    "output": {
+      "operations": []
+    }
+  }
+}
