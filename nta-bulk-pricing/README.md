@@ -1,10 +1,23 @@
 # NTA Bulk Pricing
 
-Private Shopify app for Nano Tanks Australia to replace the small subset of Upsell Koala Bundles currently in use.
+Shopify bulk-pricing replacement for Nano Tanks Australia.
+
+## Important production constraint
+
+Nano Tanks Australia is currently on Shopify Basic. Shopify's current platform rules allow Shopify Functions from public App Store apps on all plans, but custom-distribution apps that contain Shopify Functions require Shopify Plus.
+
+That changes the production architecture:
+
+- the deterministic rule engine in this repository remains valid;
+- an exact Koala replacement on the current Basic plan cannot be shipped as a private/custom Shopify Function app;
+- the exact path is a public App Store app (it can use limited listing visibility) that passes Shopify review;
+- a Basic-compatible native-discount fallback is possible for some simple rules, but it is not generally equivalent to Koala.
+
+See `docs/PLAN_GATING.md` before deployment.
 
 ## Scope
 
-Phase 1 implements the deterministic rule engine and rule-editor data model. Shopify integration will use the unified Discount Function API, with configuration stored as JSON in an app-owned discount metafield. The storefront display will be a theme app extension.
+Phase 1 implements the deterministic rule engine and rule-editor data model.
 
 The first release intentionally supports only what NTA needs:
 
@@ -30,7 +43,19 @@ Only one NTA bulk-pricing rule is selected for a cart line.
 
 ## Quantity basis
 
-Phase 1 deliberately uses the quantity on the cart line. It does not pool quantities across different products. This matches the current Koala-style volume pricing behaviour we have captured so far and avoids silently creating mix-and-match discounts.
+The exact engine uses the quantity on the cart line. It does not pool quantities across different products. This matches the Koala-style product-page volume pricing behaviour captured so far and avoids silently creating mix-and-match discounts.
+
+## Basic-plan fallback
+
+`src/native-discount-compiler.js` can compile safe subsets of rules into Shopify's native automatic amount-off discounts.
+
+It intentionally refuses unsafe conversions by default:
+
+- selected-product or collection rules would pool qualifying quantities across products;
+- mixed percentage/fixed tiers can cause Shopify's "best discount" selection to choose a lower tier instead of the intended higher tier;
+- native automatic discounts are limited to 25 active discounts.
+
+The compiler is a fallback/proof path, not the default migration path.
 
 ## Development
 
@@ -41,4 +66,7 @@ cd nta-bulk-pricing
 npm test
 ```
 
-See `docs/KOALA_CAPTURE.md` for the migration inventory and `docs/ARCHITECTURE.md` for the Shopify integration plan.
+See:
+- `docs/KOALA_CAPTURE.md` for the migration inventory
+- `docs/PLAN_GATING.md` for the Shopify Basic limitation and deployment choices
+- `docs/ARCHITECTURE.md` for the production architecture
