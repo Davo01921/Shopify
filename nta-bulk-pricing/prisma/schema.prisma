@@ -72,3 +72,14 @@ model DiscountTier {
   @@unique([ruleId, minimum])
   @@index([ruleId, minimum])
 }
+
+model DiscountDeployment {
+  shop         String    @id
+  discountId   String?
+  configHash   String?
+  ruleCount    Int       @default(0)
+  syncedAt     DateTime?
+  lastError    String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}

@@ -1,9 +1,23 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "463c06ec45915a666207575df50c2522"
+name = "NTA Bulk Pricing"
 application_url = "https://example.com"
 embedded = true
-name = "NTA Bulk Pricing"
+
+[build]
+automatically_update_urls_on_dev = true
+
+[webhooks]
+api_version = "2026-07"
+
+  [[webhooks.subscriptions]]
+  uri = "/webhooks/app/scopes_update"
+  topics = [ "app/scopes_update" ]
+
+  [[webhooks.subscriptions]]
+  uri = "/webhooks/app/uninstalled"
+  topics = [ "app/uninstalled" ]
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
@@ -11,22 +25,13 @@ scopes = "read_products,write_discounts"
 optional_scopes = [ ]
 use_legacy_install_flow = false
 
+[auth]
+redirect_urls = [ ]
+
 [discount.metafields.app.function-configuration]
 type = "json"
 name = "NTA bulk pricing rules"
-access.admin = "merchant_read_write"
-access.storefront = "none"
 
-[webhooks]
-api_version = "2026-07"
-
-  [[webhooks.subscriptions]]
-  uri = "/webhooks/app/uninstalled"
-  topics = [ "app/uninstalled" ]
-
-  [[webhooks.subscriptions]]
-  uri = "/webhooks/app/scopes_update"
-  topics = [ "app/scopes_update" ]
-
-[auth]
-redirect_urls = [ ]
+  [discount.metafields.app.function-configuration.access]
+  admin = "merchant_read_write"
+  storefront = "none"
