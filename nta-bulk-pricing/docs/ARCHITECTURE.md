@@ -1,36 +1,64 @@
 # Architecture
 
-## Shopify pieces
+## Store constraint
 
-1. **Embedded admin app**
+NTA is on Shopify Basic.
+
+Shopify Functions are available on all plans when delivered by a public app distributed through the Shopify App Store. Custom-distribution apps that contain Shopify Functions require Shopify Plus.
+
+Therefore the exact production architecture and the private-app architecture are not the same thing.
+
+## Exact production path on Shopify Basic
+
+1. **Public Shopify app with limited listing visibility**
+   - submitted through Shopify App Store review
+   - can remain intentionally hard to discover while still being a public app
+   - gives a Basic-plan store access to the Discount Function
+
+2. **Admin configuration UI**
    - create/edit/delete/enable rules
    - choose products or collections using Shopify resource pickers
    - edit tiers, labels and badges
    - validate overlaps before save
 
-2. **One automatic NTA bulk-pricing discount**
-   - implemented with Shopify's unified Discount Function API
+3. **One automatic NTA bulk-pricing discount**
+   - Shopify unified Discount Function API
    - function target: `cart.lines.discounts.generate.run`
-   - rule configuration stored on the discount in an app-owned JSON metafield
-   - the function emits product discount candidates only; no network dependency during checkout
+   - configuration stored in one app-owned JSON metafield
+   - product discount candidates only
+   - no external network dependency during checkout
 
-3. **Theme app extension**
+4. **Theme app extension**
    - product-page app block
-   - reads the applicable rule and renders quantity tiers
-   - calculated saving text is the default
-   - custom marketing badge remains optional
+   - renders the applicable quantity tiers
+   - calculated savings text is the default
+   - custom marketing badge is optional
 
-## Function input
+## Why native automatic discounts are only a fallback
+
+Shopify Basic supports native automatic amount-off discounts, and the Admin API can create them without a Function. They can represent some simple volume tiers by creating one automatic discount per threshold.
+
+However they are not generally equivalent to the captured Koala behaviour:
+
+- A minimum quantity for a discount that targets multiple products or a collection counts qualifying items across that target. It does not guarantee "three of this exact cart line".
+- Shopify Basic applies only one product discount to the same line and chooses the best eligible discount when multiple non-combinable product discounts overlap.
+- Percentage and fixed-dollar tiers can cross over. Example: an 8% tier can be worth more than a later A$1-off tier on higher-priced products, causing the earlier tier to win.
+- Shopify limits stores to 25 active automatic discounts. Expanding two tiers across many individual products can exceed that quickly.
+
+The native compiler therefore defaults to refusing conversions that cannot be proven equivalent.
+
+## Function input for the exact path
 
 The production Function should request only:
+
 - cart line id
 - cart line quantity
 - variant id
 - product id
-- membership for the configured collection IDs
+- membership for configured collection IDs where needed
 - the app-owned JSON configuration metafield on the discount
 
-For Shopify API 2026-07, collection membership should be queried on the variant where possible so the app remains compatible with variant-scoped collections.
+The Function should keep the input query below Shopify's Function query complexity limit and use one JSON metafield for configuration.
 
 ## Rule document
 
