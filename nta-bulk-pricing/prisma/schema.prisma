@@ -32,3 +32,43 @@ model Session {
   refreshToken        String?
   refreshTokenExpires DateTime?
 }
+
+model DiscountRule {
+  id String @id @default(cuid())
+  shop String
+  title String
+  enabled Boolean @default(true)
+  priority Int @default(0)
+  targetType String
+  internalNotes String @default("")
+  startsAt DateTime?
+  endsAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  targets DiscountTarget[]
+  tiers DiscountTier[]
+  @@index([shop, enabled, priority])
+}
+
+model DiscountTarget {
+  id String @id @default(cuid())
+  shopifyId String
+  label String @default("")
+  ruleId String
+  rule DiscountRule @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+  @@unique([ruleId, shopifyId])
+}
+
+model DiscountTier {
+  id String @id @default(cuid())
+  minimum Int
+  maximum Int?
+  title String @default("")
+  discountType String
+  discountValue Decimal?
+  message String @default("")
+  ruleId String
+  rule DiscountRule @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+  @@unique([ruleId, minimum])
+  @@index([ruleId, minimum])
+}
