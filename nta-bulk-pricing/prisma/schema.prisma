@@ -77,6 +77,7 @@ model DiscountDeployment {
   shop         String    @id
   discountId   String?
   configHash   String?
+  configJson   String?
   ruleCount    Int       @default(0)
   syncedAt     DateTime?
   lastError    String?

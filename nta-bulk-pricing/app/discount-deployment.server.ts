@@ -66,10 +66,11 @@ export async function publishRules(admin: AdminClient, shop: string, now = new D
     });
     const payload = await response.json();
     const discount = mutationDiscount(payload, operation);
+    const configJson = JSON.stringify(configuration);
     const deployment = await db.discountDeployment.upsert({
       where: { shop },
-      create: { shop, discountId: discount.discountId, configHash: hash, ruleCount: configuration.rules.length, syncedAt: now },
-      update: { discountId: discount.discountId, configHash: hash, ruleCount: configuration.rules.length, syncedAt: now, lastError: null },
+      create: { shop, discountId: discount.discountId, configHash: hash, configJson, ruleCount: configuration.rules.length, syncedAt: now },
+      update: { discountId: discount.discountId, configHash: hash, configJson, ruleCount: configuration.rules.length, syncedAt: now, lastError: null },
     });
     return { deployment, configuration, status: discount.status, operation: isUpdate ? "updated" : "created" };
   } catch (error) {

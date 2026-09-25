@@ -17,7 +17,7 @@ See `docs/PLAN_GATING.md` before deployment.
 
 ## Scope
 
-Phase 1 implements the deterministic rule engine and rule-editor data model.
+The current foundation implements the deterministic rule engine, rule management, Shopify discount synchronization, and a product-page quantity-pricing app block.
 
 The first release intentionally supports only what NTA needs:
 
@@ -56,6 +56,12 @@ It intentionally refuses unsafe conversions by default:
 - native automatic discounts are limited to 25 active discounts.
 
 The compiler is a fallback/proof path, not the default migration path.
+
+## Storefront display
+
+The `Quantity pricing` theme app block requests the last successfully published Function configuration through the authenticated app proxy. It does not read draft rule edits, so the product-page tiers remain aligned with checkout until the next explicit publish.
+
+The block is available only on product templates and hides itself when no published rule matches the current product/variant/collection context.
 
 ## Development
 

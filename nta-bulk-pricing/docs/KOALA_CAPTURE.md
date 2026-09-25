@@ -49,6 +49,14 @@ Visible tiers:
 
 The second-tier badge says "6%+ Off". Verify the actual configured/live discount before migration.
 
-## Migration rule
+## Migration status
+
+No production replacement rules have been created from this capture. The source evidence does not establish the exact discount values for Inverts, Group Fish Discounts, the 10–19 Frozen Foods tier, or Pea Puffers. The A$1-per-item Frozen Foods value at 20+ is verified in the captured configuration, but publishing that tier alone would incorrectly omit the unknown 10–19 behaviour.
+
+Required evidence before rule creation:
+
+- exact discount type and value at each non-standard tier;
+- definitive product/collection membership for each offer;
+- a live Koala cart result at every threshold to resolve the screenshot label/unit-price discrepancies.
 
 Koala remains active until all four live checkout behaviours are verified against the replacement. Screenshots are evidence of configuration/display, not proof of the checkout calculation.
