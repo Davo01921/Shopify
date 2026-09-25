@@ -3,7 +3,7 @@
   <div
     class="nta-bulk-pricing"
     data-nta-bulk-pricing
-    data-endpoint="/apps/nta-bulk-pricing/tiers"
+    data-endpoint="/apps/nta-bulk-pricing"
     data-product-id="{{ pricing_product.id }}"
     data-variant-id="{{ pricing_product.selected_or_first_available_variant.id }}"
     data-collection-ids="{% for collection in pricing_product.collections %}{{ collection.id }}{% unless forloop.last %},{% endunless %}{% endfor %}"
