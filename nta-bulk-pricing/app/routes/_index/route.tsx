@@ -30,9 +30,11 @@ export default function App() {
   return (
     <div className={styles.index}>
       <div className={styles.content}>
-        <h1 className={styles.heading}>A short heading about [your app]</h1>
+        <p className={styles.text}><strong>TierWeave</strong></p>
+        <h1 className={styles.heading}>Quantity pricing without hidden rules</h1>
         <p className={styles.text}>
-          A tagline about [your app] that describes your value proposition.
+          Build product, variant, and collection quantity tiers that stay
+          consistent from the product page through checkout.
         </p>
         {showForm && (
           <Form className={styles.form} method="post">
@@ -48,16 +50,16 @@ export default function App() {
         )}
         <ul className={styles.list}>
           <li>
-            <strong>Product feature</strong>. Some detail about your feature and
-            its benefit to your customer.
+            <strong>Flexible targeting.</strong> Apply rules to products,
+            variants, or collections.
           </li>
           <li>
-            <strong>Product feature</strong>. Some detail about your feature and
-            its benefit to your customer.
+            <strong>Deterministic pricing.</strong> Preview tiers before
+            publishing them to Shopify.
           </li>
           <li>
-            <strong>Product feature</strong>. Some detail about your feature and
-            its benefit to your customer.
+            <strong>Storefront clarity.</strong> Show matching quantity pricing
+            on product pages and at checkout.
           </li>
         </ul>
       </div>

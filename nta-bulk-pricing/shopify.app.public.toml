@@ -1,12 +1,16 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-client_id = "463c06ec45915a666207575df50c2522"
-name = "NTA Bulk Pricing"
-application_url = "https://example.com"
+client_id = "614ce0ecd6c0e5ffb6eab7a798ca0717"
+name = "TierWeave"
+application_url = "https://nta-bulk-pricing-1032936869489.australia-southeast1.run.app"
 embedded = true
 
-[build]
-automatically_update_urls_on_dev = true
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "read_products,write_app_proxy,write_discounts"
+
+[auth]
+redirect_urls = [ "https://nta-bulk-pricing-1032936869489.australia-southeast1.run.app/auth/callback" ]
 
 [webhooks]
 api_version = "2026-07"
@@ -31,15 +35,6 @@ api_version = "2026-07"
   uri = "/webhooks/shop/redact"
   compliance_topics = [ "shop/redact" ]
 
-[access_scopes]
-# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "read_products,write_app_proxy,write_discounts"
-optional_scopes = [ ]
-use_legacy_install_flow = false
-
-[auth]
-redirect_urls = [ ]
-
 [app_proxy]
 url = "/apps/bulk-pricing"
 prefix = "apps"
@@ -47,7 +42,7 @@ subpath = "nta-bulk-pricing"
 
 [discount.metafields.app.function-configuration]
 type = "json"
-name = "NTA bulk pricing rules"
+name = "TierWeave pricing rules"
 
   [discount.metafields.app.function-configuration.access]
   admin = "merchant_read_write"
