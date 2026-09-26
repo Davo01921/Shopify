@@ -27,7 +27,7 @@ const rules = [
     target: { type: "PRODUCT", ids: ["gid://shopify/Product/pea"] },
     tiers: [
       { id: "p1", min: 1, max: 2, discount: { type: "NONE" } },
-      { id: "p2", min: 3, max: null, discount: { type: "PERCENTAGE", value: 6 } },
+      { id: "p2", min: 3, max: null, discount: { type: "FIXED_PER_ITEM", value: 4 } },
     ],
   },
   {
@@ -37,7 +37,7 @@ const rules = [
     target: { type: "PRODUCTS", ids: ["gid://shopify/Product/frozen"] },
     tiers: [
       { id: "f1", min: 1, max: 9, discount: { type: "NONE" } },
-      { id: "f2", min: 10, max: 19, discount: { type: "PERCENTAGE", value: 8 } },
+      { id: "f2", min: 10, max: 19, discount: { type: "FIXED_PER_ITEM", value: 0.5 } },
       { id: "f3", min: 20, max: null, discount: { type: "FIXED_PER_ITEM", value: 1 } },
     ],
   },
@@ -63,7 +63,7 @@ test("specific product overrides a broader collection rule", () => {
   };
 
   assert.equal(selectRuleForLine(line, rules).id, "pea-puffer");
-  assert.equal(evaluateLine(line, rules).discount.value, 6);
+  assert.deepEqual(evaluateLine(line, rules).discount, { type: "FIXED_PER_ITEM", value: 4 });
 });
 
 test("fixed amount is applied to each item", () => {
@@ -79,6 +79,22 @@ test("fixed amount is applied to each item", () => {
   assert.deepEqual(
     operation.productDiscountsAdd.candidates[0].value,
     { fixedAmount: { amount: 1, appliesToEachItem: true } },
+  );
+});
+
+test("frozen-food 10–19 tier applies A$0.50 to each item", () => {
+  const line = {
+    lineId: "line-frozen-ten",
+    productId: "gid://shopify/Product/frozen",
+    variantId: "gid://shopify/ProductVariant/frozen",
+    quantity: 10,
+    collectionMemberships: [],
+  };
+
+  const operation = buildProductDiscountOperation([line], rules);
+  assert.deepEqual(
+    operation.productDiscountsAdd.candidates[0].value,
+    { fixedAmount: { amount: 0.5, appliesToEachItem: true } },
   );
 });
 

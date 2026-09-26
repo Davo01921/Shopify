@@ -4,59 +4,101 @@ Captured from the NTA Shopify admin on 25 September 2026.
 
 ## 1. Inverts
 
+Koala campaign ID: `cm96s8wfd5itiy81mypwfektu`.
+
 Scope: selected invertebrate products.
 
 Visible product examples include Freshwater Mussels; Black/Brown Black Foot Mystery Snail; Blue, Brown, Gold, Ivory, Jade, Magenta and Purple Mystery Snails; Blue Dream, Carbon Rilli, Emerald Green, Green, Konaku Red, Sunkist and Super Black Cherry Shrimp.
 
-Visible tiers:
-- standard-price tier
-- 3+ discounted tier
-- 6+ larger discounted tier
+Configured tiers:
+- 1–2: standard price
+- 3–5: 5% off
+- 6+: 10% off
 
-The screenshots showed savings text that did not agree with the previewed unit prices, so the actual live checkout discount values must be verified before migration.
+An isolated live cart using Black/Brown Black Foot Mystery Snail confirmed no discount at 2, 5% at 3, and 10% at 6. The Koala block's 6+ savings label incorrectly says 20%.
 
 ## 2. Group Fish Discounts
 
+Koala campaign ID: `cm9ddz5md5eytiscvezptruhm`.
+
 Block title: `GROUP FISH DISCOUNTS`.
 
-Visible tiers:
-- Buy 1-2: standard price
-- Buy 3-5: discounted
-- Buy 6+: larger discount
+Configured tiers:
+- Buy 1–2: standard price
+- Buy 3–5: 5% off
+- Buy 6+: 10% off
 
-Again, the previewed unit prices did not agree with the displayed percentage labels. Verify the actual live cart/checkout calculations before migration.
+An isolated live cart using Cardinal Tetra confirmed no discount at 2, 5% at 3, and 10% at 6. The Koala block's savings labels incorrectly say 10% and 20%.
 
 ## 3. Frozen Foods
 
+Koala campaign ID: `cmgsmq0361rwsj8ceelh3bcf5`.
+
 Block title: `FROZEN FOODS`.
 
-Visible tiers:
-- Buy 1-9 items: no discount
-- Buy 10-19 items: discounted; exact configured value still to verify
-- Buy 20+ items: fixed amount A$1 off per product
+Configured tiers:
+- Buy 1–9 items: no discount
+- Buy 10–19 items: A$0.50 off each item
+- Buy 20+ items: A$1 off each item
 
-The 20+ badge says "20% Off", but the rule configuration shown is A$1 fixed amount per product. The replacement should generate savings text from the actual rule by default.
+An isolated live cart using ORCA Frozen Brine Shrimp confirmed no discount at 9 and A$0.50 per item at 10. The product's current stock of 10 prevents a live 20-unit cart test; the published Koala configuration explicitly contains the A$1 amount. The 20+ badge says "20% Off", which is not the configured rule.
 
 ## 4. Pea Puffers
 
-Scope: one specific product.
+Koala campaign ID: `cmgzulas806befdch0jkazwtt`.
+
+Scope: Dwarf Pea Puffer product `6918785958097`.
 
 Block title: `Pea Puffers`.
 
-Visible tiers:
-- Buy 1-2: standard price
-- Buy 3 or more: discounted
+Configured tiers:
+- Buy 1–2: standard price
+- Buy 3+: A$4 off each fish
 
-The second-tier badge says "6%+ Off". Verify the actual configured/live discount before migration.
+An isolated live cart confirmed no discount at 2 and A$4 per fish at 3. The second-tier badge says "6%+ Off", which does not describe the configured fixed-amount rule.
+
+## 5. Red Cherry Shrimp
+
+Koala campaign ID: `cmtq9oitc85iv9y44d8eiw5xh`.
+
+Scope: RCS Red Cherry Shrimp product `6840207540433`.
+
+Configured tiers:
+- Buy 1–3: standard price
+- Buy 4–9: A$0.50 off each shrimp
+- Buy 10–19: A$1 off each shrimp
+- Buy 20+: A$1.50 off each shrimp
+
+An isolated live cart confirmed no discount at 3 and A$0.50 per shrimp at 4.
+
+## 6. Otocinclus
+
+Koala campaign ID: `cmsxs2o970l988f45vz0794zp`.
+
+Scope: Otocinclus Arnoldi product `6840207573201`.
+
+Block title: `OTOCINCLUS DEAL`.
+
+Configured tiers:
+- Buy 1–3: standard price
+- Buy 4–5: A$2 off each fish
+- Buy 6+: A$3 off each fish
 
 ## Migration status
 
-No production replacement rules have been created from this capture. The source evidence does not establish the exact discount values for Inverts, Group Fish Discounts, the 10–19 Frozen Foods tier, or Pea Puffers. The A$1-per-item Frozen Foods value at 20+ is verified in the captured configuration, but publishing that tier alone would incorrectly omit the unknown 10–19 behaviour.
+The exact tier types and values for all six active campaigns were recovered from Koala's live storefront state on 26 September 2026. A targeted audit of 349 products across the live-fish, invertebrate, and frozen-food taxonomy found 127 current campaign members:
 
-Required evidence before rule creation:
+- Group Fish: 107 products
+- Inverts: 15 products
+- Frozen Foods: 2 products
+- Red Cherry Shrimp, Otocinclus, and Pea Puffer: 1 product each
 
-- exact discount type and value at each non-standard tier;
-- definitive product/collection membership for each offer;
-- a live Koala cart result at every threshold to resolve the screenshot label/unit-price discrepancies.
+The reproducible product-level capture is stored in `docs/koala-campaigns-2026-09-26.json`. No production replacement rules have been enabled.
 
-Koala remains active until all four live checkout behaviours are verified against the replacement. Screenshots are evidence of configuration/display, not proof of the checkout calculation.
+Still required before cutover:
+
+- replacement parity tests after the exact product sets are loaded;
+- the 20+ Frozen Foods live-cart result when stock permits, or equivalent checkout evidence;
+- final side-by-side cart and checkout testing on the approved public app.
+
+Koala remains active until the replacement matches all six live checkout behaviours. The configured values above take precedence over Koala's inaccurate promotional labels.

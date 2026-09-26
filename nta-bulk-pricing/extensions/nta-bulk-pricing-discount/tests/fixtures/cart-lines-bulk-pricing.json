@@ -75,7 +75,7 @@
                     "id": "three",
                     "min": 3,
                     "max": null,
-                    "discount": { "type": "PERCENTAGE", "value": 6 }
+                    "discount": { "type": "FIXED_PER_ITEM", "value": 4 }
                   }
                 ]
               },
@@ -117,8 +117,9 @@
                 ],
                 "message": "Pea Puffers",
                 "value": {
-                  "percentage": {
-                    "value": "6.0"
+                  "fixedAmount": {
+                    "amount": "4.0",
+                    "appliesToEachItem": true
                   }
                 }
               },

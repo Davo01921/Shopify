@@ -11,7 +11,7 @@ const configuration = {
     { id: "product", title: "Pea puffers", enabled: true, priority: 0,
       target: { type: "PRODUCT", ids: ["gid://shopify/Product/10"] },
       tiers: [{ id: "p1", min: 1, max: 2, discount: { type: "NONE" } },
-        { id: "p3", min: 3, max: null, message: "Buy 3+", discount: { type: "PERCENTAGE", value: 6 } }] },
+        { id: "p3", min: 3, max: null, message: "Buy 3+", discount: { type: "FIXED_PER_ITEM", value: 4 } }] },
   ],
 };
 
