@@ -42,11 +42,11 @@ Create clear quantity breaks for selected products, variants, or collections and
 
 ## Listing assets
 
-- App icon: `docs/app-store-assets/tierweave-icon-1200.jpg` (58 KB) or `tierweave-icon-512.png` (175 KB)
+- App icon: `docs/app-store-assets/tierweave-icon-upload.png` (18 KB, exactly 1200×1200, under Shopify's 1 MB cap) or `tierweave-icon-upload.jpg` (39 KB)
 - Listing screenshots: `docs/app-store-assets/rendered/tierweave-listing-01-rules.png` through `03-storefront.png`
 - Optional demo video.
 - Pricing plan: Free during launch. Add Shopify Billing before advertising a paid plan.
-- Reviewer test-store credentials entered directly in the Developer Dashboard.
+- Review: Shopify installs the app on their own test store; paste the Reviewer test flow above into the review notes.
 
 ## Safety
 
