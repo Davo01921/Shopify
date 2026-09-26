@@ -1,6 +1,6 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-client_id = "614ce0ecd6c0e5ffb6eab7a798ca0717"
+client_id = "5e3f1bf315fc06bc75e78deefd20ed29"
 name = "TierWeave"
 application_url = "https://nta-bulk-pricing-1032936869489.australia-southeast1.run.app"
 embedded = true
