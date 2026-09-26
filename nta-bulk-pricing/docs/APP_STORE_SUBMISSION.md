@@ -27,7 +27,7 @@ Create clear quantity breaks for selected products, variants, or collections and
 - Privacy policy: `https://nta-bulk-pricing-1032936869489.australia-southeast1.run.app/privacy`
 - Terms: `https://nta-bulk-pricing-1032936869489.australia-southeast1.run.app/terms`
 - Support: `https://nta-bulk-pricing-1032936869489.australia-southeast1.run.app/support`
-- Health check: `https://nta-bulk-pricing-1032936869489.australia-southeast1.run.app/healthz`
+- Health check: `https://nta-bulk-pricing-1032936869489.australia-southeast1.run.app/health`
 
 ## Reviewer test flow
 
@@ -42,7 +42,7 @@ Create clear quantity breaks for selected products, variants, or collections and
 
 ## Listing assets
 
-- App icon: `docs/app-store-assets/rendered/tierweave-icon-1200.png`
+- App icon: `docs/app-store-assets/tierweave-icon-1200.jpg` (58 KB) or `tierweave-icon-512.png` (175 KB)
 - Listing screenshots: `docs/app-store-assets/rendered/tierweave-listing-01-rules.png` through `03-storefront.png`
 - Optional demo video.
 - Pricing plan: Free during launch. Add Shopify Billing before advertising a paid plan.
