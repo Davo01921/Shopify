@@ -1,3 +1,38 @@
+import { CONFIG_STATES, CONFIG_VERSION } from "./rule-engine.js";
+
+export function createConfigDocument(overrides = {}) {
+  return {
+    version: CONFIG_VERSION,
+    state: overrides.state ?? CONFIG_STATES.DRAFT,
+    rules: overrides.rules ? structuredClone(overrides.rules) : [],
+  };
+}
+
+export function setConfigState(config, state) {
+  return { ...config, state };
+}
+
+export function replaceRules(config, rules) {
+  return { ...config, rules: structuredClone(rules) };
+}
+
+export function upsertRule(config, rule) {
+  const exists = config.rules.some((item) => item.id === rule.id);
+  return {
+    ...config,
+    rules: exists
+      ? config.rules.map((item) => item.id === rule.id ? structuredClone(rule) : item)
+      : [...config.rules, structuredClone(rule)],
+  };
+}
+
+export function removeRule(config, ruleId) {
+  return {
+    ...config,
+    rules: config.rules.filter((rule) => rule.id !== ruleId),
+  };
+}
+
 export function createRule(overrides = {}) {
   return {
     id: overrides.id ?? crypto.randomUUID(),
