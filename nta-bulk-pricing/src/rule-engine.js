@@ -90,9 +90,14 @@ export function selectRuleForLine(line, rules) {
     .map((rule, index) => ({
       rule,
       index,
-      score: TARGET_WEIGHT[rule.target.type] + (Number(rule.priority) || 0),
+      specificity: TARGET_WEIGHT[rule.target.type],
+      priority: Number(rule.priority) || 0,
     }))
-    .sort((a, b) => b.score - a.score || a.index - b.index);
+    .sort((a, b) =>
+      b.specificity - a.specificity
+      || b.priority - a.priority
+      || a.index - b.index,
+    );
 
   return matches[0]?.rule ?? null;
 }
@@ -135,7 +140,7 @@ export function buildProductDiscountOperation(lines, rules) {
       ? { percentage: { value: result.discount.value } }
       : {
           fixedAmount: {
-            amount: result.discount.value,
+            amount: String(result.discount.value),
             appliesToEachItem: true,
           },
         };
