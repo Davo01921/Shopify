@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feat/nta-bulk-pricing-phase-1
+      - feat/nta-bulk-pricing-phase-2
     paths:
       - "nta-bulk-pricing/**"
       - ".github/workflows/nta-bulk-pricing.yml"
