@@ -1,0 +1,25 @@
+name: NTA Bulk Pricing
+
+on:
+  push:
+    branches:
+      - feat/nta-bulk-pricing-phase-1
+    paths:
+      - "nta-bulk-pricing/**"
+      - ".github/workflows/nta-bulk-pricing.yml"
+  pull_request:
+    paths:
+      - "nta-bulk-pricing/**"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: nta-bulk-pricing
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm test
