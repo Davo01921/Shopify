@@ -4,15 +4,21 @@ on:
   push:
     branches:
       - feat/nta-bulk-pricing-phase-1
+      - feat/nta-bulk-pricing-phase-2
     paths:
       - "nta-bulk-pricing/**"
       - ".github/workflows/nta-bulk-pricing.yml"
   pull_request:
     paths:
       - "nta-bulk-pricing/**"
+      - ".github/workflows/nta-bulk-pricing.yml"
+
+concurrency:
+  group: nta-bulk-pricing-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  test:
+  core-test:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -23,3 +29,17 @@ jobs:
         with:
           node-version: "22"
       - run: npm test
+
+  admin-typecheck:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: nta-bulk-pricing/shopify-app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm install --package-lock=false --ignore-scripts
+      - run: npx prisma generate
+      - run: npm run typecheck

@@ -1,0 +1,18 @@
+# Link this scaffold to the existing Shopify Partner app with:
+#   npm run config:link
+# The CLI will populate the real app identity.
+client_id = ""
+
+[access_scopes]
+scopes = "read_products,read_discounts,write_discounts"
+
+[webhooks]
+api_version = "2026-07"
+
+  [[webhooks.subscriptions]]
+  uri = "/webhooks/app/uninstalled"
+  topics = ["app/uninstalled"]
+
+  [[webhooks.subscriptions]]
+  uri = "/webhooks/app/scopes_update"
+  topics = ["app/scopes_update"]
