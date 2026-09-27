@@ -13,6 +13,10 @@ on:
       - "nta-bulk-pricing/**"
       - ".github/workflows/nta-bulk-pricing.yml"
 
+concurrency:
+  group: nta-bulk-pricing-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   core-test:
     runs-on: ubuntu-latest
