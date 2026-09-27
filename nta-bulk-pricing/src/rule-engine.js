@@ -14,6 +14,7 @@ export const REASON_CODES = Object.freeze({
   NO_MATCHING_TIER: "NO_MATCHING_TIER",
   STANDARD_PRICE_TIER: "STANDARD_PRICE_TIER",
   DISCOUNT_APPLIED: "DISCOUNT_APPLIED",
+  NO_ELIGIBLE_LINES: "NO_ELIGIBLE_LINES",
 });
 
 const TARGET_WEIGHT = Object.freeze({
@@ -234,7 +235,12 @@ function loserReason(selected, candidate) {
 }
 
 function lineIsEvaluable(line) {
-  return line && Number.isInteger(line.quantity) && line.quantity >= 1;
+  return Boolean(
+    line
+    && nonEmptyString(line.lineId)
+    && Number.isInteger(line.quantity)
+    && line.quantity >= 1
+  );
 }
 
 export function diagnoseLine(line, rules) {
@@ -412,7 +418,7 @@ export function evaluateCheckout(lines, config, { requireApproved = true } = {})
 
   return {
     status: operation ? "DISCOUNT" : "NO_DISCOUNT",
-    reasonCode: operation ? REASON_CODES.DISCOUNT_APPLIED : "NO_ELIGIBLE_LINES",
+    reasonCode: operation ? REASON_CODES.DISCOUNT_APPLIED : REASON_CODES.NO_ELIGIBLE_LINES,
     operation,
     configuration: inspection,
     lines: diagnostics,
