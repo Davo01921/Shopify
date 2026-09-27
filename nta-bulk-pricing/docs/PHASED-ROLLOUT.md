@@ -102,8 +102,21 @@ Never let flexible configuration override a safety invariant. Explicit product a
 - Invalid configuration fails closed.
 - Rule evaluation returns enough structured detail to explain the result.
 
+### Acceptance result
+- Specificity precedence is enforced independently of numeric priority.
+- Versioned configuration contract is implemented (`version: 1`).
+- Configuration lifecycle states are implemented: `DRAFT`, `VALIDATED`, `APPROVED_FOR_PRODUCTION`.
+- Checkout rejects malformed, unsupported-version and unapproved configuration with no discount.
+- Target IDs and target types are validated.
+- Duplicate target IDs and duplicate tier IDs are rejected.
+- Overlapping tiers and invalid discount values are rejected.
+- Structured line diagnostics expose selected rule/tier, competing rules and stable reason codes.
+- Missing/invalid checkout line identity cannot emit a discount candidate.
+- Regression coverage includes boundaries, overlaps, specificity, tie priority, disabled rules, mixed carts and fail-closed configuration.
+- GitHub Actions run #25 passed on the completed Phase 1 head.
+
 ### Status
-**IN PROGRESS**
+**COMPLETE**
 
 ---
 
@@ -379,7 +392,7 @@ NTA remains stable while another test store can configure and execute independen
 
 ## Immediate next actions
 
-1. Finish Phase 1 hardening and regression tests.
-2. Capture exact current Koala checkout values for the four offer families.
-3. Define the versioned rule JSON contract and diagnostics result contract.
-4. Scaffold the embedded admin and Discount Function only after the engine contract is frozen.
+1. Begin Phase 2 embedded admin/configuration layer against the frozen V1 rule contract.
+2. Capture exact current Koala checkout values for the four offer families before migration.
+3. Keep Koala authoritative while Phase 2-6 are built and tested.
+4. Do not begin production cutover work until the Function and real-cart matrix pass.
