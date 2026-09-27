@@ -89,13 +89,13 @@ export default function RulesDashboard() {
             </s-banner>
           ) : null}
 
-          {review.errors.map((item) => (
+          {review.errors.map((item: any) => (
             <s-banner key={item.code} tone="critical">
               {item.message}
             </s-banner>
           ))}
 
-          {review.warnings.map((item) => (
+          {review.warnings.map((item: any) => (
             <s-banner key={item.code} tone="warning">
               {item.message}
             </s-banner>
@@ -155,7 +155,7 @@ export default function RulesDashboard() {
           <s-paragraph>No bulk-pricing rules yet.</s-paragraph>
         ) : (
           <s-stack direction="block" gap="base">
-            {rows.map((row) => (
+            {rows.map((row: any) => (
               <s-box
                 key={row.id}
                 padding="base"
