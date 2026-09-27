@@ -155,8 +155,25 @@ Admin should answer:
 - No production rule requires a code edit.
 - Invalid or ambiguous changes cannot be promoted to approved configuration.
 
+### Implementation result
+- Admin configuration service implemented and tested.
+- Config lifecycle implemented: DRAFT -> VALIDATED -> APPROVED_FOR_PRODUCTION.
+- Any edit automatically demotes the configuration to DRAFT.
+- Same-target and product-specificity overlap warnings are surfaced.
+- Warnings require explicit acknowledgement before production approval.
+- Shopify Resource Picker adapter supports products, product sets, variants and collections.
+- Per-shop JSON configuration persistence is implemented through Prisma.
+- Embedded React Router App Home scaffold is implemented with Shopify authentication.
+- Rules dashboard, rule editor and diagnostics page are implemented.
+- Shopify uninstall/scope webhooks are present.
+- Core test and embedded-app TypeScript CI both pass (run #79).
+- Koala remains authoritative and no checkout discount was changed.
+
+### Remaining acceptance item
+The app must still be linked to the existing Shopify Partner app and opened in an NTA development store for real UI/resource-picker validation. That requires Shopify CLI authentication/app linking and is deliberately not represented as complete from source-code CI alone.
+
 ### Status
-**NOT STARTED**
+**CODE COMPLETE — DEV-STORE VALIDATION PENDING**
 
 ---
 
