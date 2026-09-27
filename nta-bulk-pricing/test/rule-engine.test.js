@@ -78,7 +78,7 @@ test("fixed amount is applied to each item", () => {
   const operation = buildProductDiscountOperation([line], rules);
   assert.deepEqual(
     operation.productDiscountsAdd.candidates[0].value,
-    { fixedAmount: { amount: 1, appliesToEachItem: true } },
+    { fixedAmount: { amount: "1", appliesToEachItem: true } },
   );
 });
 
@@ -106,4 +106,44 @@ test("overlapping tiers are rejected", () => {
   }];
 
   assert.throws(() => validateRules(invalid), /overlapping tiers/);
+});
+
+
+test("specificity always wins before numeric priority", () => {
+  const broadHighPriority = {
+    id: "broad-high-priority",
+    title: "Broad collection",
+    enabled: true,
+    priority: 9999,
+    target: { type: "COLLECTIONS", ids: ["gid://shopify/Collection/fish"] },
+    tiers: [
+      { id: "b1", min: 1, max: null, discount: { type: "PERCENTAGE", value: 50 } },
+    ],
+  };
+
+  const specificLowPriority = {
+    id: "specific-low-priority",
+    title: "Specific product",
+    enabled: true,
+    priority: -9999,
+    target: { type: "PRODUCT", ids: ["gid://shopify/Product/pea"] },
+    tiers: [
+      { id: "s1", min: 1, max: null, discount: { type: "PERCENTAGE", value: 6 } },
+    ],
+  };
+
+  const line = {
+    lineId: "line-priority",
+    productId: "gid://shopify/Product/pea",
+    variantId: "gid://shopify/ProductVariant/pea",
+    quantity: 3,
+    collectionMemberships: [
+      { collectionId: "gid://shopify/Collection/fish", isMember: true },
+    ],
+  };
+
+  assert.equal(
+    selectRuleForLine(line, [broadHighPriority, specificLowPriority]).id,
+    "specific-low-priority",
+  );
 });
