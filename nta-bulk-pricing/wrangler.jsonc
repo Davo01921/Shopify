@@ -1,0 +1,20 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "tierweave-staging",
+  "main": "./workers/app.ts",
+  "compatibility_date": "2026-09-30",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "observability": {
+    "enabled": true
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "tierweave-staging",
+      "database_id": "2c5c4c5d-5df6-4b28-a45d-8f34619c6fd4",
+      "migrations_dir": "d1-migrations"
+    }
+  ]
+}

@@ -1,16 +1,8 @@
+import { PrismaD1 } from "@prisma/adapter-d1";
 import { PrismaClient } from "@prisma/client";
+import { env } from "cloudflare:workers";
 
-declare global {
-  // eslint-disable-next-line no-var
-  var prismaGlobal: PrismaClient;
-}
-
-if (process.env.NODE_ENV !== "production") {
-  if (!global.prismaGlobal) {
-    global.prismaGlobal = new PrismaClient();
-  }
-}
-
-const prisma = global.prismaGlobal ?? new PrismaClient();
+const adapter = new PrismaD1(env.DB);
+const prisma = new PrismaClient({ adapter });
 
 export default prisma;
