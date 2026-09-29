@@ -2,7 +2,7 @@
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "tierweave-staging",
   "main": "./workers/app.ts",
-  "compatibility_date": "2026-09-30",
+  "compatibility_date": "2026-09-26",
   "compatibility_flags": [
     "nodejs_compat"
   ],
