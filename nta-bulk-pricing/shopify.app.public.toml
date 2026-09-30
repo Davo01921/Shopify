@@ -2,7 +2,7 @@
 
 client_id = "5e3f1bf315fc06bc75e78deefd20ed29"
 name = "TierWeave"
-application_url = "https://nta-bulk-pricing-1032936869489.australia-southeast1.run.app"
+application_url = "https://tierweave-production.livetranscriber.workers.dev"
 embedded = true
 
 [access_scopes]
@@ -10,7 +10,10 @@ embedded = true
 scopes = "read_products,write_app_proxy,write_discounts"
 
 [auth]
-redirect_urls = [ "https://nta-bulk-pricing-1032936869489.australia-southeast1.run.app/auth/callback" ]
+redirect_urls = [
+  "https://tierweave-production.livetranscriber.workers.dev/auth/callback",
+  "https://nta-bulk-pricing-1032936869489.australia-southeast1.run.app/auth/callback"
+]
 
 [webhooks]
 api_version = "2026-07"
