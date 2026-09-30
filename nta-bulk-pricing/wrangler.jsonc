@@ -16,5 +16,10 @@
       "database_id": "2c5c4c5d-5df6-4b28-a45d-8f34619c6fd4",
       "migrations_dir": "d1-migrations"
     }
-  ]
+  ],
+  "vars": {
+    "SHOPIFY_API_KEY": "463c06ec45915a666207575df50c2522",
+    "SHOPIFY_APP_URL": "https://tierweave-staging.livetranscriber.workers.dev",
+    "SCOPES": "read_products,write_app_proxy,write_discounts"
+  }
 }

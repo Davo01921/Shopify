@@ -2,8 +2,11 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider   = "prisma-client-js"
+  provider   = "prisma-client"
+  output     = "../app/generated/prisma"
   engineType = "client"
+  runtime    = "workerd"
+  moduleFormat = "esm"
 }
 
 // Note that some adapters may set a maximum length for the String type by default, please ensure your strings are long
