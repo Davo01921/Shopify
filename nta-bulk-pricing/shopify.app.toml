@@ -2,7 +2,7 @@
 
 client_id = "463c06ec45915a666207575df50c2522"
 name = "NTA Bulk Pricing"
-application_url = "https://example.com"
+application_url = "https://tierweave-staging.livetranscriber.workers.dev"
 embedded = true
 
 [build]
@@ -38,7 +38,7 @@ optional_scopes = [ ]
 use_legacy_install_flow = false
 
 [auth]
-redirect_urls = [ ]
+redirect_urls = [ "https://tierweave-staging.livetranscriber.workers.dev/auth/callback" ]
 
 [app_proxy]
 url = "/apps/bulk-pricing"
