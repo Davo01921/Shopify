@@ -8,7 +8,7 @@
     "node": ">=22.12"
   },
   "scripts": {
-    "build": "react-router build",
+    "build": "prisma generate && react-router build",
     "dev": "shopify app dev",
     "config:link": "shopify app config link",
     "config:validate": "shopify app config validate --json",
@@ -20,9 +20,9 @@
     "test": "npm run test:core && npm run test:function",
     "test:core": "node --test test/*.test.js",
     "test:function": "npm --workspace extensions/nta-bulk-pricing-discount test",
-    "typecheck": "react-router typegen && tsc --noEmit",
+    "typecheck": "prisma generate && react-router typegen && tsc --noEmit",
     "cf-typegen": "wrangler types",
-    "cf-build": "react-router build",
+    "cf-build": "prisma generate && react-router build",
     "cf-deploy": "pnpm run cf-build && wrangler deploy"
   },
   "dependencies": {

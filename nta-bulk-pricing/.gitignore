@@ -32,3 +32,6 @@ database.sqlite
 # Cloudflare generated/runtime files
 /dist
 /.wrangler
+
+# Prisma generated client
+/app/generated/
