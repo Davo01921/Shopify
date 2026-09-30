@@ -1,4 +1,5 @@
 import db from "./db.server";
+import { env } from "cloudflare:workers";
 
 const TARGET_TYPES = new Set(["PRODUCT", "PRODUCTS", "VARIANTS", "COLLECTIONS"]);
 const DISCOUNT_TYPES = new Set(["NONE", "PERCENTAGE", "FIXED_PER_ITEM"]);
@@ -52,20 +53,131 @@ export function validateRule(input: RuleInput) {
 const include = { targets: true, tiers: { orderBy: { minimum: "asc" as const } } };
 export const listRules = (shop: string) => db.discountRule.findMany({ where: { shop }, include, orderBy: [{ priority: "desc" }, { updatedAt: "desc" }] });
 export const getRule = (shop: string, id: string) => db.discountRule.findFirst({ where: { shop, id }, include });
-function data(input: RuleInput) { return {
-  title: input.title, enabled: input.enabled, priority: input.priority, targetType: input.targetType, internalNotes: input.internalNotes,
-  startsAt: input.startsAt ? new Date(input.startsAt) : null, endsAt: input.endsAt ? new Date(input.endsAt) : null,
-  targets: { create: input.targetIds.map((shopifyId) => ({ shopifyId })) },
-  tiers: { create: input.tiers.map((tier) => ({ ...tier, discountValue: tier.discountValue })) },
-}; }
-export const createRule = (shop: string, input: RuleInput) => db.discountRule.create({ data: { shop, ...data(input) }, include });
-export const updateRule = (shop: string, id: string, input: RuleInput) => db.$transaction(async (tx) => {
-  const current = await tx.discountRule.findFirst({ where: { shop, id }, select: { id: true } });
+const iso = (value: string | null) =>
+  value ? new Date(value).toISOString() : null;
+
+const newId = () => globalThis.crypto.randomUUID();
+
+function targetStatements(ruleId: string, input: RuleInput) {
+  return input.targetIds.map((shopifyId) =>
+    env.DB.prepare(
+      `INSERT INTO "DiscountTarget"
+        ("id", "shopifyId", "label", "ruleId")
+       VALUES (?, ?, '', ?)`
+    ).bind(newId(), shopifyId, ruleId)
+  );
+}
+
+function tierStatements(ruleId: string, input: RuleInput) {
+  return input.tiers.map((tier) =>
+    env.DB.prepare(
+      `INSERT INTO "DiscountTier"
+        ("id", "minimum", "maximum", "title",
+         "discountType", "discountValue", "message", "ruleId")
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+    ).bind(
+      newId(),
+      tier.minimum,
+      tier.maximum,
+      tier.title,
+      tier.discountType,
+      tier.discountValue,
+      tier.message,
+      ruleId,
+    )
+  );
+}
+
+export async function createRule(shop: string, input: RuleInput) {
+  const id = newId();
+  const now = new Date().toISOString();
+
+  await env.DB.batch([
+    env.DB.prepare(
+      `INSERT INTO "DiscountRule"
+        ("id", "shop", "title", "enabled", "priority", "targetType",
+         "internalNotes", "startsAt", "endsAt", "createdAt", "updatedAt")
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+    ).bind(
+      id,
+      shop,
+      input.title,
+      input.enabled ? 1 : 0,
+      input.priority,
+      input.targetType,
+      input.internalNotes,
+      iso(input.startsAt),
+      iso(input.endsAt),
+      now,
+      now,
+    ),
+    ...targetStatements(id, input),
+    ...tierStatements(id, input),
+  ]);
+
+  const created = await getRule(shop, id);
+
+  if (!created) {
+    throw new Error("Rule was created but could not be reloaded.");
+  }
+
+  return created;
+}
+
+export async function updateRule(
+  shop: string,
+  id: string,
+  input: RuleInput,
+) {
+  const current = await db.discountRule.findFirst({
+    where: { shop, id },
+    select: { id: true },
+  });
+
   if (!current) return null;
-  await tx.discountTarget.deleteMany({ where: { ruleId: id } });
-  await tx.discountTier.deleteMany({ where: { ruleId: id } });
-  return tx.discountRule.update({ where: { id }, data: data(input), include });
-});
+
+  const now = new Date().toISOString();
+
+  await env.DB.batch([
+    env.DB.prepare(
+      `UPDATE "DiscountRule"
+       SET "title" = ?,
+           "enabled" = ?,
+           "priority" = ?,
+           "targetType" = ?,
+           "internalNotes" = ?,
+           "startsAt" = ?,
+           "endsAt" = ?,
+           "updatedAt" = ?
+       WHERE "id" = ? AND "shop" = ?`
+    ).bind(
+      input.title,
+      input.enabled ? 1 : 0,
+      input.priority,
+      input.targetType,
+      input.internalNotes,
+      iso(input.startsAt),
+      iso(input.endsAt),
+      now,
+      id,
+      shop,
+    ),
+
+    env.DB.prepare(
+      `DELETE FROM "DiscountTarget" WHERE "ruleId" = ?`
+    ).bind(id),
+
+    env.DB.prepare(
+      `DELETE FROM "DiscountTier" WHERE "ruleId" = ?`
+    ).bind(id),
+
+    ...targetStatements(id, input),
+    ...tierStatements(id, input),
+  ]);
+
+  return getRule(shop, id);
+}
+
 export async function duplicateRule(shop: string, id: string) {
   const source = await getRule(shop, id);
   if (!source) return null;
