@@ -47,7 +47,7 @@
                 "id": "schooling-fish",
                 "title": "GROUP FISH DISCOUNTS",
                 "enabled": true,
-                "priority": 0,
+                "priority": 1000,
                 "target": {
                   "type": "COLLECTIONS",
                   "ids": ["gid://shopify/Collection/fish"]

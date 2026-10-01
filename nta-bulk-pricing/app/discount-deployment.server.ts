@@ -48,7 +48,7 @@ export async function getDeploymentPreview(shop: string, now = new Date()) {
   };
 }
 
-export async function publishRules(admin: AdminClient, shop: string, now = new Date()) {
+export async function publishRules(admin: AdminClient, shop: string, now = new Date(), discountTitle?: string) {
   const { configuration, hash } = await configurationForShop(shop, now);
   const existing = await db.discountDeployment.findUnique({ where: { shop } });
   if (!configuration.rules.length && !existing?.discountId) {
@@ -57,7 +57,7 @@ export async function publishRules(admin: AdminClient, shop: string, now = new D
 
   const isUpdate = Boolean(existing?.discountId);
   const operation = isUpdate ? "discountAutomaticAppUpdate" : "discountAutomaticAppCreate";
-  const input = automaticDiscountInput(configuration, now.toISOString());
+  const input = automaticDiscountInput(configuration, now.toISOString(), discountTitle);
   if (isUpdate) delete input.startsAt;
 
   try {

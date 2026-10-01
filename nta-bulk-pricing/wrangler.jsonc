@@ -20,6 +20,7 @@
   "vars": {
     "SHOPIFY_API_KEY": "463c06ec45915a666207575df50c2522",
     "SHOPIFY_APP_URL": "https://tierweave-staging.livetranscriber.workers.dev",
-    "SCOPES": "read_products,write_app_proxy,write_discounts"
+    "SCOPES": "read_products,write_app_proxy,write_discounts",
+    "TIERWEAVE_DISCOUNT_TITLE": "NTA Bulk Pricing quantity pricing"
   }
 }

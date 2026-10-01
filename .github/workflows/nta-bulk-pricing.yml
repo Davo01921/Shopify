@@ -1,9 +1,9 @@
-name: NTA Bulk Pricing
+name: TierWeave
 
 on:
   push:
     branches:
-      - feat/nta-bulk-pricing-phase-1
+      - feat/tierweave-cloudflare
     paths:
       - "nta-bulk-pricing/**"
       - ".github/workflows/nta-bulk-pricing.yml"
@@ -19,7 +19,19 @@ jobs:
         working-directory: nta-bulk-pricing
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.2
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - run: npm test
+          cache: pnpm
+          cache-dependency-path: nta-bulk-pricing/pnpm-lock.yaml
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test
+      - run: pnpm run typecheck
+      - run: pnpm run lint
+      - run: pnpm run cf-build

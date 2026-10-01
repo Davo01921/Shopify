@@ -1,0 +1,11 @@
+{
+  "shop": "tierweave-function-test.myshopify.com",
+  "products": {
+    "6840213995729": { "id": "10320682189019", "title": "TierWeave test — Gold Mystery Snail 2-4cm" },
+    "6840207245521": { "id": "10320701554907", "title": "TierWeave test — Bronze Corydoras (Aeneus) 3-5cm" },
+    "6840217272529": { "id": "10320705093851", "title": "TierWeave test — ORCA Frozen Bloodworms 100g" },
+    "6918785958097": { "id": "10320708567259", "title": "TierWeave test — Dwarf Pea Puffer (Carinotetraodon travancoricus) (Juveniles) 1-1.5 cm" },
+    "6840207573201": { "id": "10320712630491", "title": "TierWeave test — Otocinclus Arnoldi (Otocinclus arnoldi)" },
+    "6840207540433": { "id": "10320715677915", "title": "TierWeave test — RCS Red Cherry Shrimp 0.5-3cm" }
+  }
+}

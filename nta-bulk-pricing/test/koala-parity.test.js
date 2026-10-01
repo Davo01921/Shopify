@@ -61,6 +61,13 @@ test("imported campaign rules pass engine validation", () => {
   assert.equal(validateRules(rules), true);
 });
 
+test("imported tier messages describe the configured saving", () => {
+  const frozen = records.find((rule) => rule.id === "koala-cmgsmq0361rwsj8ceelh3bcf5");
+  assert.deepEqual(frozen.tiers.map((tier) => tier.message), ["", "Save A$0.50 each", "Save A$1.00 each"]);
+  const fish = records.find((rule) => rule.id === "koala-cm9ddz5md5eytiscvezptruhm");
+  assert.deepEqual(fish.tiers.map((tier) => tier.message), ["", "Save 5%", "Save 10%"]);
+});
+
 test("invertebrate and group-fish boundaries match live Koala carts", () => {
   for (const id of ["cm96s8wfd5itiy81mypwfektu", "cm9ddz5md5eytiscvezptruhm"]) {
     for (const product of campaign(id).products) {

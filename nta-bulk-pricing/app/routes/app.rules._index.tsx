@@ -10,12 +10,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const [rules, deployment] = await Promise.all([listRules(session.shop), getDeploymentPreview(session.shop)]);
   return { rules, deployment, published: url.searchParams.get("published") === "1" };
 }
-export async function action({ request }: ActionFunctionArgs) {
+export async function action({ request, context }: ActionFunctionArgs) {
   const { admin, session } = await authenticate.admin(request);
   const form = await request.formData(); const id = String(form.get("id") ?? ""); const intent = String(form.get("intent") ?? "");
   if (intent === "publish") {
     try {
-      await publishRules(admin, session.shop);
+      const stagingEnv = context.cloudflare.env as Env & { TIERWEAVE_DISCOUNT_TITLE?: string };
+      await publishRules(admin, session.shop, new Date(), stagingEnv.TIERWEAVE_DISCOUNT_TITLE);
       return redirect("/app/rules?published=1");
     } catch (error) {
       return { syncError: error instanceof Error ? error.message : "The Shopify discount could not be synchronized." };

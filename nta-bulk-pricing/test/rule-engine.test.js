@@ -66,6 +66,22 @@ test("specific product overrides a broader collection rule", () => {
   assert.deepEqual(evaluateLine(line, rules).discount, { type: "FIXED_PER_ITEM", value: 4 });
 });
 
+test("numeric priority breaks ties only within the same target scope", () => {
+  const line = {
+    productId: "gid://shopify/Product/pea",
+    variantId: "gid://shopify/ProductVariant/pea",
+    quantity: 3,
+    collectionMemberships: [
+      { collectionId: "gid://shopify/Collection/fish", isMember: true },
+    ],
+  };
+  const highPriorityCollection = { ...rules[0], priority: 1000 };
+  assert.equal(selectRuleForLine(line, [highPriorityCollection, rules[1]]).id, "pea-puffer");
+
+  const sameScope = { ...rules[1], id: "pea-puffer-priority", priority: 5 };
+  assert.equal(selectRuleForLine(line, [rules[1], sameScope]).id, "pea-puffer-priority");
+});
+
 test("fixed amount is applied to each item", () => {
   const line = {
     lineId: "line-2",

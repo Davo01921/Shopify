@@ -82,7 +82,7 @@ fn select_rule<'a>(
     product_id: &str,
     collection_ids: &[String],
 ) -> Option<&'a Rule> {
-    let mut best: Option<(&Rule, i32)> = None;
+    let mut best: Option<(&Rule, (i32, i32))> = None;
 
     for rule in rules {
         if rule.enabled == Some(false)
@@ -91,7 +91,7 @@ fn select_rule<'a>(
             continue;
         }
 
-        let score = target_weight(&rule.target.r#type) + rule.priority.unwrap_or(0);
+        let score = (target_weight(&rule.target.r#type), rule.priority.unwrap_or(0));
         if best.map(|(_, best_score)| score > best_score).unwrap_or(true) {
             best = Some((rule, score));
         }

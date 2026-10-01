@@ -12,17 +12,28 @@ export function mapKoalaDiscount(discount) {
   throw new Error(`unknown Koala discount type: ${type}`);
 }
 
+function benefitMessage(discount) {
+  if (discount.discountType === "NONE") return "";
+  if (discount.discountType === "PERCENTAGE") {
+    return `Save ${discount.discountValue}%`;
+  }
+  return `Save A$${Number(discount.discountValue).toFixed(2)} each`;
+}
+
 export function mapCampaignToRule(campaign, { enabled = false } = {}) {
   const single = campaign.products.length === 1;
   const tiers = [...campaign.tiers]
     .sort((a, b) => a.minimum - b.minimum)
-    .map((tier) => ({
-      minimum: tier.minimum,
-      maximum: tier.maximum ?? null,
-      title: tier.name,
-      message: tier.name,
-      ...mapKoalaDiscount(tier.discount),
-    }));
+    .map((tier) => {
+      const discount = mapKoalaDiscount(tier.discount);
+      return {
+        minimum: tier.minimum,
+        maximum: tier.maximum ?? null,
+        title: tier.name,
+        message: benefitMessage(discount),
+        ...discount,
+      };
+    });
   return {
     id: `koala-${campaign.id}`,
     title: campaign.title || "Koala campaign",

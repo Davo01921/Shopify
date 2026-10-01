@@ -17,6 +17,11 @@ test("builds a non-stacking product discount with app-owned configuration", () =
   assert.equal(input.metafields[0].namespace, "$app:nta-bulk-pricing");
 });
 
+test("allows the staging app to use a distinct automatic discount title", () => {
+  const input = automaticDiscountInput(configuration, "2026-09-25T00:00:00.000Z", "NTA Bulk Pricing quantity pricing");
+  assert.equal(input.title, "NTA Bulk Pricing quantity pricing");
+});
+
 test("configuration hashes are deterministic and change with rules", () => {
   assert.equal(configurationHash(configuration), configurationHash(configuration));
   assert.notEqual(configurationHash(configuration), configurationHash({ ...configuration, rules: [] }));

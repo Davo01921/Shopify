@@ -13,9 +13,9 @@ export function configurationHash(configuration) {
   return createHash("sha256").update(serializeConfiguration(configuration)).digest("hex");
 }
 
-export function automaticDiscountInput(configuration, startsAt) {
+export function automaticDiscountInput(configuration, startsAt, title = DISCOUNT_TITLE) {
   return {
-    title: DISCOUNT_TITLE,
+    title,
     functionHandle: FUNCTION_HANDLE,
     discountClasses: ["PRODUCT"],
     startsAt,

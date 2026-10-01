@@ -87,12 +87,11 @@ export function selectRuleForLine(line, rules) {
   const matches = rules
     .filter((rule) => rule.enabled !== false)
     .filter((rule) => ruleMatchesLine(rule, line))
-    .map((rule, index) => ({
-      rule,
-      index,
-      score: TARGET_WEIGHT[rule.target.type] + (Number(rule.priority) || 0),
-    }))
-    .sort((a, b) => b.score - a.score || a.index - b.index);
+    .map((rule, index) => ({ rule, index }))
+    .sort((a, b) =>
+      TARGET_WEIGHT[b.rule.target.type] - TARGET_WEIGHT[a.rule.target.type] ||
+      (Number(b.rule.priority) || 0) - (Number(a.rule.priority) || 0) ||
+      a.index - b.index);
 
   return matches[0]?.rule ?? null;
 }
