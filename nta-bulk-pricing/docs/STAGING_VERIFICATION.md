@@ -45,7 +45,16 @@ labelled **NTA Bulk Pricing**.
 - The draft-theme preview displayed Group Fish tiers 1–2 standard, 3–5
   save 5%, and 6+ save 10%. Three units entered the cart at A$9.50 each,
   with a single `Save 5%` discount and A$28.50 total.
+- Root GitHub Actions run `36861492966` passed for commit `e4db7f1`.
+- The draft-theme preview also displayed the expected tiers for Frozen Foods,
+  Red Cherry Shrimp, Pea Puffers, Otocinclus, and Inverts. Changing the Red
+  Cherry Shrimp variant from A$5 to A$6 kept the correct four-tier table.
+  An ineligible Gift Card showed no bulk-pricing table.
+- Six Inverts units entered the development cart with one `Save 10%` label,
+  A$9.00 each instead of A$10.00, and A$54.00 for that line.
 
 The development storefront is password protected. Complete direct checkout
 testing with its existing storefront password; do not remove the protection
-to run these checks. Do not publish the Horizon draft theme for this test.
+to run these checks. The theme-editor preview supports cart checks, but its
+**Check out** control did not open checkout. Do not publish the Horizon draft
+theme for this test.
