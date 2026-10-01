@@ -53,8 +53,34 @@ labelled **NTA Bulk Pricing**.
 - Six Inverts units entered the development cart with one `Save 10%` label,
   A$9.00 each instead of A$10.00, and A$54.00 for that line.
 
-The development storefront is password protected. Complete direct checkout
-testing with its existing storefront password; do not remove the protection
-to run these checks. The theme-editor preview supports cart checks, but its
-**Check out** control did not open checkout. Do not publish the Horizon draft
-theme for this test.
+## Direct storefront and checkout verification on 2026-10-02
+
+After entering the existing development-store password, the unpublished
+Horizon theme was previewed directly. Password protection stayed enabled.
+The product-page table, cart line, and checkout were checked at every quantity
+below. Checkout showed exactly one TierWeave discount label for each eligible
+discounted line; no discount appeared below the first tier.
+
+| Campaign (test unit price) | Quantity → checkout total / discount label |
+| --- | --- |
+| Inverts (A$10) | 2 → A$20 / none; 3 → A$28.50 / Save 5%; 5 → A$47.50 / Save 5%; 6 → A$54 / Save 10% |
+| Group Fish (A$10) | 2 → A$20 / none; 3 → A$28.50 / Save 5%; 5 → A$47.50 / Save 5%; 6 → A$54 / Save 10% |
+| Frozen Foods (A$5) | 9 → A$45 / none; 10 → A$45 / Save A$0.50 each; 19 → A$85.50 / Save A$0.50 each; 20 → A$80 / Save A$1.00 each |
+| Red Cherry Shrimp (A$5) | 3 → A$15 / none; 4 → A$18 / Save A$0.50 each; 9 → A$40.50 / Save A$0.50 each; 10 → A$40 / Save A$1.00 each; 19 → A$76 / Save A$1.00 each; 20 → A$70 / Save A$1.50 each |
+| Pea Puffer (A$20) | 2 → A$40 / none; 3 → A$48 / Save A$4.00 each |
+| Otocinclus (A$20) | 3 → A$60 / none; 4 → A$72 / Save A$2.00 each; 5 → A$90 / Save A$2.00 each; 6 → A$102 / Save A$3.00 each |
+
+The alternative Red Cherry Shrimp variant (A$6) kept the four-tier table;
+four units were A$5.50 each in the cart and A$22 at checkout, with one
+`Save A$0.50 each` discount. A noneligible Collection Snowboard: Hydrogen
+had no pricing table and no TierWeave discount in its A$600 checkout.
+
+The app block fetched and rendered published pricing through its Shopify app
+proxy. Direct navigation to the proxy URL was blocked by the browser client,
+so the raw JSON response was not inspected separately. Collection precedence
+is covered by local tests; the six mapped staging campaigns target products,
+so a live collection-targeted rule was not added for this test.
+
+The theme-editor preview's **Check out** button did not navigate, so checkout
+verification used the direct draft-theme preview. Do not publish the Horizon
+draft theme for this test.
