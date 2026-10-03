@@ -1,5 +1,11 @@
 # Shopify plan gating and migration decision
 
+## Production resolution — 3 October 2026
+
+The NTA TierWeave implementation is now **CLOSED / PRODUCTION / BAU**. The owner confirmed the live store is using TierWeave, it has been production tested, and it is processing sales.
+
+The material below is retained as the architectural decision record that guided deployment. It is no longer an open project gate for NTA. Public-market distribution/commercialization is deferred and tracked separately in `../FUTURE_BACKLOG.md`.
+
 Checked against the connected Nano Tanks Australia Shopify store on 25 September 2026.
 
 ## Current store plan
@@ -57,13 +63,8 @@ Unsafe or behaviour-changing cases:
 
 Lowest migration risk, but it does not remove Koala.
 
-## Recommendation for the project
+## Historical recommendation
 
-Do not deploy an unusable custom Function app to NTA Basic.
+The original recommendation was to avoid an unusable custom-Function deployment on Shopify Basic and to use a production path that preserves exact per-line behaviour.
 
-Continue the core engine and storefront/admin work, but treat the production checkout integration as a decision gate:
-
-1. verify the four Koala offers in live cart/checkout;
-2. establish whether each group's quantity is truly per product or can intentionally pool across products;
-3. compare the resulting rule count with Shopify's 25-active-automatic-discount limit;
-4. if exact per-product behaviour is required across the current catalogue, use the public-app/limited-visibility Function path.
+That decision gate is now resolved for NTA: production operation is owner-confirmed and the NTA engineering project is closed. Revisit distribution mechanics only when the commercialization project is reopened.
