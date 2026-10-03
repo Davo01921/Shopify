@@ -1,5 +1,12 @@
 # Architecture
 
+## Current production status
+
+TierWeave is **CLOSED / PRODUCTION / BAU for Nano Tanks Australia** as of 3 October 2026. The owner confirms the live deployment is tested and processing sales.
+
+The architecture below records the design and distribution reasoning. Future public commercialization is separate scope.
+
+
 ## Store constraint
 
 NTA is on Shopify Basic.
