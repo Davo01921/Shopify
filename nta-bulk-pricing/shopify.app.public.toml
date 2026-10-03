@@ -1,0 +1,52 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "5e3f1bf315fc06bc75e78deefd20ed29"
+name = "TierWeave"
+application_url = "https://tierweave-production.livetranscriber.workers.dev"
+embedded = true
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "read_products,write_app_proxy,write_discounts"
+
+[auth]
+redirect_urls = [
+  "https://tierweave-production.livetranscriber.workers.dev/auth/callback",
+  "https://nta-bulk-pricing-1032936869489.australia-southeast1.run.app/auth/callback"
+]
+
+[webhooks]
+api_version = "2026-07"
+
+  [[webhooks.subscriptions]]
+  uri = "/webhooks/app/scopes_update"
+  topics = [ "app/scopes_update" ]
+
+  [[webhooks.subscriptions]]
+  uri = "/webhooks/app/uninstalled"
+  topics = [ "app/uninstalled" ]
+
+  [[webhooks.subscriptions]]
+  uri = "/webhooks/customers/data_request"
+  compliance_topics = [ "customers/data_request" ]
+
+  [[webhooks.subscriptions]]
+  uri = "/webhooks/customers/redact"
+  compliance_topics = [ "customers/redact" ]
+
+  [[webhooks.subscriptions]]
+  uri = "/webhooks/shop/redact"
+  compliance_topics = [ "shop/redact" ]
+
+[app_proxy]
+url = "/apps/bulk-pricing"
+prefix = "apps"
+subpath = "nta-bulk-pricing"
+
+[discount.metafields.app.function-configuration]
+type = "json"
+name = "TierWeave pricing rules"
+
+  [discount.metafields.app.function-configuration.access]
+  admin = "merchant_read_write"
+  storefront = "none"

@@ -1,0 +1,30 @@
+query Input($collectionIds: [ID!]) {
+  cart {
+    lines {
+      id
+      quantity
+      merchandise {
+        __typename
+        ... on ProductVariant {
+          id
+          product {
+            id
+            collectionMemberships: inCollections(ids: $collectionIds) {
+              collectionId
+              isMember
+            }
+          }
+        }
+      }
+    }
+  }
+  discount {
+    discountClasses
+    metafield(
+      namespace: "$app:nta-bulk-pricing"
+      key: "function-configuration"
+    ) {
+      jsonValue
+    }
+  }
+}

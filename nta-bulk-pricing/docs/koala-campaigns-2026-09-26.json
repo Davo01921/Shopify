@@ -1,0 +1,1250 @@
+{
+  "version": 1,
+  "capturedAt": "2026-09-26T00:42:29.771Z",
+  "source": "https://nanotanksaustralia.com.au",
+  "campaigns": [
+    {
+      "id": "cm96s8wfd5itiy81mypwfektu",
+      "title": "BUNDLE & SAVE",
+      "tiers": [
+        {
+          "id": "54840e6d-6aed-4e53-bf18-b2fb085e0cc8",
+          "name": "For 1",
+          "minimum": 1,
+          "maximum": 2,
+          "discount": {
+            "type": "percentage",
+            "value": 0
+          }
+        },
+        {
+          "id": "0a7f86d7-f402-45b1-9044-0fdd2454b31e",
+          "name": "For 3",
+          "minimum": 3,
+          "maximum": 5,
+          "discount": {
+            "type": "percentage",
+            "value": 5
+          }
+        },
+        {
+          "id": "81cd3232-e2d7-41d2-ae22-f5211de3bc04",
+          "name": "For 6 or more",
+          "minimum": 6,
+          "maximum": null,
+          "discount": {
+            "type": "percentage",
+            "value": 10
+          }
+        }
+      ],
+      "products": [
+        {
+          "id": "6840213995729",
+          "handle": "gold-mystery-snails",
+          "title": "Gold Mystery Snail 2-4cm",
+          "collections": [
+            "mystery-snails"
+          ]
+        },
+        {
+          "id": "6840222548177",
+          "handle": "blue-dream-cherry-shrimp",
+          "title": "Blue Dream Cherry Shrimp 0.5-3cm",
+          "collections": [
+            "shrimps"
+          ]
+        },
+        {
+          "id": "6840226054353",
+          "handle": "medium-sized-freshwater-mussels",
+          "title": "Freshwater Mussels",
+          "collections": [
+            "snails-mussels-1"
+          ]
+        },
+        {
+          "id": "6840238735569",
+          "handle": "brown-mystery-snails",
+          "title": "Brown Mystery Snail 2–4cm",
+          "collections": [
+            "mystery-snails"
+          ]
+        },
+        {
+          "id": "6840269308113",
+          "handle": "black-brown-black-foot-mystery-snail",
+          "title": "Black/Brown Black Foot Mystery Snail",
+          "collections": [
+            "mystery-snails"
+          ]
+        },
+        {
+          "id": "6840296767697",
+          "handle": "preorder-black-cherry-shrimp",
+          "title": "Super Black Cherry Shrimp 1-3cm",
+          "collections": [
+            "shrimps"
+          ]
+        },
+        {
+          "id": "6840310431953",
+          "handle": "rare-magenta-mystery-snail",
+          "title": "Magenta Mystery Snail",
+          "collections": [
+            "mystery-snails"
+          ]
+        },
+        {
+          "id": "6840315805905",
+          "handle": "green-shell-purple-footed-mystery-snail-pomacea-bridgesii-1-5-large",
+          "title": "Green Purple/Black Footed Mystery Snail 2-4cm",
+          "collections": [
+            "mystery-snails"
+          ]
+        },
+        {
+          "id": "6840322064593",
+          "handle": "jade-mystery-snails",
+          "title": "Jade Mystery Snail 2-4cm",
+          "collections": [
+            "mystery-snails"
+          ]
+        },
+        {
+          "id": "6945804058833",
+          "handle": "purple-mystery-snails",
+          "title": "Purple Mystery Snail 2-4cm",
+          "collections": [
+            "mystery-snails"
+          ]
+        },
+        {
+          "id": "6945804255441",
+          "handle": "rare-blue-mystery-snails-2-3cm",
+          "title": "Blue Mystery Snail 2-4cm",
+          "collections": [
+            "mystery-snails"
+          ]
+        },
+        {
+          "id": "7337634627793",
+          "handle": "ivory-mystery-snail",
+          "title": "Ivory Mystery Snail 2-4cm",
+          "collections": [
+            "mystery-snails"
+          ]
+        },
+        {
+          "id": "7521494434001",
+          "handle": "sunkist-cherry-shrimp-1-3cm-1-3cm-no-shipping-to-wa-or-tas",
+          "title": "Sunkist Cherry Shrimp 1-3cm",
+          "collections": [
+            "shrimps"
+          ]
+        },
+        {
+          "id": "7579238760657",
+          "handle": "carbon-cherry-shrimp-1-3cm-no-shipping-to-wa-or-tas",
+          "title": "Carbon Cherry Shrimp 1-3cm",
+          "collections": [
+            "shrimps"
+          ]
+        },
+        {
+          "id": "7749406359761",
+          "handle": "carbon-rilli-cherry-shrimp-1-3cm",
+          "title": "Carbon Rilli Cherry Shrimp 1-3cm",
+          "collections": [
+            "shrimps"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cm9ddz5md5eytiscvezptruhm",
+      "title": "GROUP FISH DISCOUNTS",
+      "tiers": [
+        {
+          "id": "dbf8d13f-80ef-4698-91a5-1a3992bd1860",
+          "name": "Buy 1-2",
+          "minimum": 1,
+          "maximum": 2,
+          "discount": {
+            "type": "percentage",
+            "value": 0
+          }
+        },
+        {
+          "id": "6d79733a-8e91-4458-9977-4e18d21d814b",
+          "name": "Buy 3-5",
+          "minimum": 3,
+          "maximum": 5,
+          "discount": {
+            "type": "percentage",
+            "value": 5
+          }
+        },
+        {
+          "id": "5b0a86fa-6566-4386-8529-0b56417eddab",
+          "name": "Buy 6+",
+          "minimum": 6,
+          "maximum": null,
+          "discount": {
+            "type": "percentage",
+            "value": 10
+          }
+        }
+      ],
+      "products": [
+        {
+          "id": "6840207245521",
+          "handle": "bronze-corydoras-corydoras-aenus",
+          "title": "Bronze Corydoras (Aeneus) 3-5cm",
+          "collections": [
+            "corydoras"
+          ]
+        },
+        {
+          "id": "6840207278289",
+          "handle": "albino-bronze-corydoras-corydoras-aenus",
+          "title": "Albino Bronze Corydoras (Aeneus) 3cm",
+          "collections": [
+            "corydoras"
+          ]
+        },
+        {
+          "id": "6840207311057",
+          "handle": "corydoras-sterbai-3-nbsp-to-3-5-nbsp",
+          "title": "Corydoras Sterbai 2-4cm",
+          "collections": [
+            "corydoras"
+          ]
+        },
+        {
+          "id": "6840207409361",
+          "handle": "assorted-endler-guppies",
+          "title": "Endler - Assorted (Poecilia wingei) 3-5cm",
+          "collections": [
+            "endlers"
+          ]
+        },
+        {
+          "id": "6840212095185",
+          "handle": "black-neon-tetra-gold-form-3cm",
+          "title": "Black Neon Tetra (Gold Form) (Hyphessobrycon herbertaxelrodi) 3cm",
+          "collections": [
+            "tetras"
+          ]
+        },
+        {
+          "id": "6840212390097",
+          "handle": "bleeding-heart-tetra-3-5cm",
+          "title": "Bleeding Heart Tetra (Hyphessobrycon erythrostigma) 3.5cm",
+          "collections": [
+            "tetras"
+          ]
+        },
+        {
+          "id": "6840212455633",
+          "handle": "blue-king-tetra-cochus-4cm",
+          "title": "Blue King Tetra (Cochu's Blue Tetra) (Boehlkea fredcochui)",
+          "collections": [
+            "tetras"
+          ]
+        },
+        {
+          "id": "6840212881617",
+          "handle": "lampeye-tetra-red-eye-3cm",
+          "title": "Red Eye Lampeye Tetra (Moenkhausia sanctaefilomenae)",
+          "collections": [
+            "tetras"
+          ]
+        },
+        {
+          "id": "6840212979921",
+          "handle": "lampeye-tetra-balloon-xl",
+          "title": "Balloon Lampeye Tetra (Moenkhausia sanctaefilomenae)",
+          "collections": [
+            "tetras"
+          ]
+        },
+        {
+          "id": "6840213110993",
+          "handle": "paraguay-tetra-3cm",
+          "title": "Paraguay Tetra (Moenkhausia sanctaefilomenae)",
+          "collections": [
+            "tetras"
+          ]
+        },
+        {
+          "id": "6840213209297",
+          "handle": "black-phantom-tetra-2-5cm",
+          "title": "Black Phantom Tetra (Hyphessobrycon megalopterus)",
+          "collections": [
+            "tetras"
+          ]
+        },
+        {
+          "id": "6840213307601",
+          "handle": "phantom-tetra-red-2-5cm",
+          "title": "Red Phantom Tetra (Hyphessobrycon sweglesi)",
+          "collections": [
+            "tetras"
+          ]
+        },
+        {
+          "id": "6840213471441",
+          "handle": "red-belly-tetra-3cm",
+          "title": "Red Belly Tetra (Moenkhausia dichroura)",
+          "collections": [
+            "tetras"
+          ]
+        },
+        {
+          "id": "6840213569745",
+          "handle": "nbsp-penguin-tetra-nbsp",
+          "title": "Penguin Tetra (Aphyocharax paraguayensis)",
+          "collections": [
+            "tetras"
+          ]
+        },
+        {
+          "id": "6840214094033",
+          "handle": "cardinal-tetra-3cm",
+          "title": "Cardinal Tetra (Paracheirodon axelrodi)",
+          "collections": [
+            "tetras"
+          ]
+        },
+        {
+          "id": "6840214290641",
+          "handle": "congo-tetra-phenacogrammus-interruptus",
+          "title": "Congo Tetra (Phenacogrammus interruptus)",
+          "collections": [
+            "tetras"
+          ]
+        },
+        {
+          "id": "6840214388945",
+          "handle": "super-rare-corydoras-hastatus",
+          "title": "Corydoras Hastatus 1-2cm",
+          "collections": [
+            "corydoras"
+          ]
+        },
+        {
+          "id": "6840214487249",
+          "handle": "corydoras-pygmaeus-pygmy",
+          "title": "Corydoras Pygmaeus Pygmy 1-2cm",
+          "collections": [
+            "corydoras"
+          ]
+        },
+        {
+          "id": "6840218878161",
+          "handle": "chilli-rasbora-boraras-brigittae",
+          "title": "Chilli Rasbora Boraras Brigittae",
+          "collections": [
+            "rasboras",
+            "danios"
+          ]
+        },
+        {
+          "id": "6840221237457",
+          "handle": "harlequin-rasbora-3cm",
+          "title": "Harlequin Rasbora 3-4cm",
+          "collections": [
+            "rasboras"
+          ]
+        },
+        {
+          "id": "6840221335761",
+          "handle": "three-stripe-corydoras-corydoras-trilineatus",
+          "title": "Corydoras Trilineatus 3-5cm",
+          "collections": [
+            "corydoras"
+          ]
+        },
+        {
+          "id": "6840221630673",
+          "handle": "assorted-guppy-female-and-males-3cm",
+          "title": "Assorted Guppy",
+          "collections": [
+            "guppies-and-endlers"
+          ]
+        },
+        {
+          "id": "6840226316497",
+          "handle": "ember-tetras-hyphessobrycon-amandae-xl",
+          "title": "Ember Tetra (Hyphessobrycon amandae) 1.5 cm",
+          "collections": [
+            "tetras"
+          ]
+        },
+        {
+          "id": "6840229101777",
+          "handle": "4cm-bandit-corydoras-metae",
+          "title": "Bandit Corydoras (Corydoras metae) 3–4cm",
+          "collections": [
+            "corydoras"
+          ]
+        },
+        {
+          "id": "6840232739025",
+          "handle": "cherry-barb-3cm-puntius-titteya",
+          "title": "Cherry Barb (Puntius titteya) 3–5cm",
+          "collections": [
+            "barbs"
+          ]
+        },
+        {
+          "id": "6840232804561",
+          "handle": "rosy-barbs-5cm-pethia-conchonius",
+          "title": "Rosy Barb (Pethia conchonius) 3–5cm",
+          "collections": [
+            "barbs"
+          ]
+        },
+        {
+          "id": "6840232902865",
+          "handle": "golden-barbs-3cm-barbodes-semifasciolatus",
+          "title": "Golden Barb (Barbodes semifasciolatus) 3cm",
+          "collections": [
+            "barbs"
+          ]
+        },
+        {
+          "id": "6840233001169",
+          "handle": "neon-rosy-barb-6cm-male-pethia-conchonius",
+          "title": "Glowlight Chilli Rosy Barb (Pethia conchonius) 3–5cm",
+          "collections": [
+            "barbs"
+          ]
+        },
+        {
+          "id": "6840233099473",
+          "handle": "melon-barb-5cm-haludaria-fasciata",
+          "title": "Melon Barb (Haludaria fasciata) 4–6cm",
+          "collections": [
+            "barbs"
+          ]
+        },
+        {
+          "id": "6840233165009",
+          "handle": "odessa-barb-4cm-pethia-padamya",
+          "title": "Odessa Barb (Pethia padamya) 3–5cm",
+          "collections": [
+            "barbs"
+          ]
+        },
+        {
+          "id": "6840233230545",
+          "handle": "long-fin-rosy-barb-5cm-pethia-conchonius",
+          "title": "Longfin Rosy Barb (Pethia conchonius) 3cm",
+          "collections": [
+            "barbs"
+          ]
+        },
+        {
+          "id": "6840233492689",
+          "handle": "torpedo-barb-5cm-sahyadria-denisonii",
+          "title": "Torpedo Barb (Sahyadria denisonii) 3–5cm",
+          "collections": [
+            "barbs"
+          ]
+        },
+        {
+          "id": "6840234508497",
+          "handle": "green-neon-tetra",
+          "title": "Green Neon Tetra (Paracheirodon simulans) 3–5cm",
+          "collections": [
+            "tetras"
+          ]
+        },
+        {
+          "id": "6840235917521",
+          "handle": "tiger-barbs",
+          "title": "Tiger Barb (Puntigrus tetrazona) 2–4cm",
+          "collections": [
+            "barbs"
+          ]
+        },
+        {
+          "id": "6840236277969",
+          "handle": "corydoras-venezuela-2-5cm",
+          "title": "Venezuelan Corydoras 2–4cm",
+          "collections": [
+            "corydoras"
+          ]
+        },
+        {
+          "id": "6840236998865",
+          "handle": "bloodfin-tetra",
+          "title": "Bloodfin Tetra",
+          "collections": [
+            "tetras"
+          ]
+        },
+        {
+          "id": "6840255119569",
+          "handle": "celestial-pearl-danio-galaxy-rasbora-danio-margaritatus-cpd",
+          "title": "Celestial Pearl Danio (Danio margaritatus) 3–5cm",
+          "collections": [
+            "rasboras",
+            "danios"
+          ]
+        },
+        {
+          "id": "6840255250641",
+          "handle": "emerald-dwarf-rasbora-danio-erythromicron",
+          "title": "Emerald Dwarf Rasbora (Danio erythromicron) 2–4cm",
+          "collections": [
+            "rasboras",
+            "danios"
+          ]
+        },
+        {
+          "id": "6840264360145",
+          "handle": "balloon-red-eye-tetra",
+          "title": "Balloon Red Eye Tetra (Moenkhausia sanctaefilomenae)",
+          "collections": [
+            "tetras"
+          ]
+        },
+        {
+          "id": "6840266358993",
+          "handle": "emperor-tetra",
+          "title": "Blue Emperor Tetra (Nematobrycon palmeri)",
+          "collections": [
+            "tetras"
+          ]
+        },
+        {
+          "id": "6840268619985",
+          "handle": "rasbora-espei",
+          "title": "Lambchop Rasbora (Trigonostigma espei)",
+          "collections": [
+            "rasboras"
+          ]
+        },
+        {
+          "id": "6840271700177",
+          "handle": "hengeli-rasbora-3cm",
+          "title": "Hengeli Rasbora (Trigonostigma hengeli)",
+          "collections": [
+            "rasboras"
+          ]
+        },
+        {
+          "id": "6840281792721",
+          "handle": "rosy-tetra-hyphessobrycon-rosaceus",
+          "title": "Rosy Tetra (Hyphessobrycon rosaceus)",
+          "collections": [
+            "tetras"
+          ]
+        },
+        {
+          "id": "6840282874065",
+          "handle": "white-ornate-tetras-hyphessobrycon-bentosi",
+          "title": "White Ornate Tetras (Hyphessobrycon bentosi)",
+          "collections": [
+            "tetras"
+          ]
+        },
+        {
+          "id": "6840286413009",
+          "handle": "bororas-merah-false-brigittae-aka-false-chilli-rasbora",
+          "title": "Phoenix Rasbora 'Bororas Merah' (false brigittae aka False Chilli Rasbora)",
+          "collections": [
+            "rasboras"
+          ]
+        },
+        {
+          "id": "6840298963153",
+          "handle": "rummy-nose-tetra-1-to-2",
+          "title": "Rummy Nose Tetra 3-5cm",
+          "collections": [
+            "tetras"
+          ]
+        },
+        {
+          "id": "6840299225297",
+          "handle": "rasboras-maculatus",
+          "title": "Rasboras Maculatus 1-2cm",
+          "collections": [
+            "rasboras"
+          ]
+        },
+        {
+          "id": "6840302305489",
+          "handle": "red-line-endler-pairs",
+          "title": "Endler - Red Line (Poecillia wingei) 3-5cm",
+          "collections": [
+            "endlers"
+          ]
+        },
+        {
+          "id": "6840309940433",
+          "handle": "black-neon-tetra",
+          "title": "Black Neon Tetra (Hyphessobrycon herbertaxelrodi)",
+          "collections": [
+            "tetras"
+          ]
+        },
+        {
+          "id": "6840311840977",
+          "handle": "corydoras-axelrodi-deckeri",
+          "title": "Corydoras Axelrodi-deckeri",
+          "collections": [
+            "corydoras"
+          ]
+        },
+        {
+          "id": "6840323571921",
+          "handle": "albino-corydoras-paleatus",
+          "title": "Corydoras Paleatus Albino 2-4cm",
+          "collections": [
+            "corydoras"
+          ]
+        },
+        {
+          "id": "6840325079249",
+          "handle": "longfin-cherry-barb",
+          "title": "Longfin Cherry Barb Puntius titteya 3-5cm",
+          "collections": [
+            "barbs"
+          ]
+        },
+        {
+          "id": "6840327110865",
+          "handle": "clown-rasboras-rasbora-kalochroma",
+          "title": "Clown Rasbora (Rasbora kalochroma)",
+          "collections": [
+            "rasboras"
+          ]
+        },
+        {
+          "id": "6840329928913",
+          "handle": "neon-green-rasbora-2cm-microdevario-kubotai",
+          "title": "Neon Green Rasbora 2cm (Microdevario Kubotai)",
+          "collections": [
+            "rasboras"
+          ]
+        },
+        {
+          "id": "6840335433937",
+          "handle": "white-fin-ornate-tetra-hyphessobrycon-bentosi-3cm",
+          "title": "White Fin Ornate Tetra (Hyphessobrycon bentosi) 3cm",
+          "collections": [
+            "tetras"
+          ]
+        },
+        {
+          "id": "6912457015505",
+          "handle": "scissors-tail-rasbora",
+          "title": "Scissors Tail Rasbora",
+          "collections": [
+            "rasboras"
+          ]
+        },
+        {
+          "id": "6930663964881",
+          "handle": "gold-green-tiger-endler",
+          "title": "Endler - Gold / Green Tiger (Poecillia wingei) 3-5cm",
+          "collections": [
+            "endlers"
+          ]
+        },
+        {
+          "id": "6954413097169",
+          "handle": "elegant-corydoras-corydoras-elegans",
+          "title": "Elegant Corydoras (Corydoras elegans) 3cm",
+          "collections": [
+            "corydoras"
+          ]
+        },
+        {
+          "id": "6954419159249",
+          "handle": "purple-harlequin-rasbora",
+          "title": "Purple Harlequin Rasbora",
+          "collections": [
+            "rasboras"
+          ]
+        },
+        {
+          "id": "6965035139281",
+          "handle": "redtail-yellow-phantom-tetra-approx-3cm",
+          "title": "Redtail Yellow Phantom Tetra (Hyphessobrycon sp.)",
+          "collections": [
+            "tetras"
+          ]
+        },
+        {
+          "id": "6994379276497",
+          "handle": "platinum-rummynose-tetra",
+          "title": "Platinum Brilliant Rummynose Tetra 3-5cm",
+          "collections": [
+            "tetras"
+          ]
+        },
+        {
+          "id": "7079847788753",
+          "handle": "corydoras-paleatus-long-fin-short-fin",
+          "title": "Corydoras Paleatus Long Fin/ Short Fin Pepper 2-4cm",
+          "collections": [
+            "corydoras"
+          ]
+        },
+        {
+          "id": "7177400877265",
+          "handle": "chilli-endlers",
+          "title": "Endler - Chilli (Poecillia wingei) 3-5cm",
+          "collections": [
+            "endlers"
+          ]
+        },
+        {
+          "id": "7177495380177",
+          "handle": "silverrado-endler-guppy",
+          "title": "Endler - Silverado (Poecilia wingei) 3-5cm",
+          "collections": [
+            "endlers"
+          ]
+        },
+        {
+          "id": "7244649791697",
+          "handle": "moss-green-tiger-barb",
+          "title": "Moss Green Tiger Barbs Puntigrus tetrazona 2-4cm",
+          "collections": [
+            "barbs"
+          ]
+        },
+        {
+          "id": "7259557724369",
+          "handle": "mascara-barb-6cm-rare",
+          "title": "Mascara Barb dawkinsia assimilis 6-8cm",
+          "collections": [
+            "barbs"
+          ]
+        },
+        {
+          "id": "7426751496401",
+          "handle": "albino-tiger-barbs-puntigrus-tetrazona-2-4cm",
+          "title": "Albino Tiger Barbs Puntigrus tetrazona 2-4cm",
+          "collections": [
+            "barbs"
+          ]
+        },
+        {
+          "id": "7426751594705",
+          "handle": "platinum-green-tiger-barbs-puntigrus-tetrazona-2-4cm",
+          "title": "Platinum Green Tiger Barbs Puntigrus tetrazona 2-4cm",
+          "collections": [
+            "barbs"
+          ]
+        },
+        {
+          "id": "7426751758545",
+          "handle": "long-fin-tiger-barbs-puntigrus-tetrazona-2-4cm",
+          "title": "Long Fin Tiger Barbs Puntigrus tetrazona 2-4cm",
+          "collections": [
+            "barbs"
+          ]
+        },
+        {
+          "id": "7426751824081",
+          "handle": "long-fin-albino-tiger-barbs-puntigrus-tetrazona-2-4cm",
+          "title": "Long Fin Albino Tiger Barbs Puntigrus tetrazona 2-4cm",
+          "collections": [
+            "barbs"
+          ]
+        },
+        {
+          "id": "7426751889617",
+          "handle": "long-fin-moss-green-tiger-barbs-puntigrus-tetrazona-2-4cm",
+          "title": "Long Fin Moss Green Tiger Barbs Puntigrus tetrazona 2-4cm",
+          "collections": [
+            "barbs"
+          ]
+        },
+        {
+          "id": "7426752086225",
+          "handle": "golden-tiger-barbs-puntigrus-tetrazona-2-4cm",
+          "title": "Golden Tiger Barbs Puntigrus tetrazona 2-4cm",
+          "collections": [
+            "barbs"
+          ]
+        },
+        {
+          "id": "7430392021201",
+          "handle": "albino-cherry-barb-puntius-titteya-3cm",
+          "title": "Albino Cherry Barb Puntius titteya 3-5cm",
+          "collections": [
+            "barbs"
+          ]
+        },
+        {
+          "id": "7430392086737",
+          "handle": "albino-firecracker-cherry-barb-puntius-titteya-3cm",
+          "title": "Albino Firecracker Cherry Barb Puntius titteya 3-4cm",
+          "collections": [
+            "barbs"
+          ]
+        },
+        {
+          "id": "7430392185041",
+          "handle": "albino-long-fin-cherry-barb-puntius-titteya-3cm",
+          "title": "Albino Long Fin Cherry Barb Puntius titteya 3cm",
+          "collections": [
+            "barbs"
+          ]
+        },
+        {
+          "id": "7432222048465",
+          "handle": "black-ruby-barb-pethia-nigrofasciata-3cm",
+          "title": "Black Ruby Barb Pethia nigrofasciata 2-3cm",
+          "collections": [
+            "barbs"
+          ]
+        },
+        {
+          "id": "7432232861905",
+          "handle": "checkered-barb-oliotius-oligolepis-3cm",
+          "title": "Checkered Barb Oliotius oligolepis 3-5cm",
+          "collections": [
+            "barbs"
+          ]
+        },
+        {
+          "id": "7432234139857",
+          "handle": "spanner-barb-barbodes-lateristriga-3cm-copy",
+          "title": "Spanner Barb Barbodes lateristriga 3cm",
+          "collections": [
+            "barbs"
+          ]
+        },
+        {
+          "id": "7432252784849",
+          "handle": "arulius-barb-dawkinsia-tambraparniei-3cm",
+          "title": "Arulius Barb Dawkinsia tambraparniei 3-4cm",
+          "collections": [
+            "barbs"
+          ]
+        },
+        {
+          "id": "7464115306705",
+          "handle": "neon-tetra-2-3cm",
+          "title": "Neon Tetra (Paracheirodon innesi) 2-3cm",
+          "collections": [
+            "tetras"
+          ]
+        },
+        {
+          "id": "7482942488785",
+          "handle": "gold-cardinal-tetra-2-5-3cm",
+          "title": "GOLD Cardinal Tetra (Paracheirodon axelrodi) 2.5-3cm",
+          "collections": [
+            "tetras"
+          ]
+        },
+        {
+          "id": "7494262718673",
+          "handle": "black-bar-endlers-price-per-fish",
+          "title": "Endler - Black Bar (Poecillia wingei) 3-5cm",
+          "collections": [
+            "endlers"
+          ]
+        },
+        {
+          "id": "7517783163089",
+          "handle": "assorted-endler-fry-0-5cm-1cm",
+          "title": "Endler - Assorted Fry (Poecillia wingei) 0.5cm - 1cm",
+          "collections": [
+            "endlers"
+          ]
+        },
+        {
+          "id": "7517784047825",
+          "handle": "japanese-blue-endler-3-5cm",
+          "title": "Endler - Japanese Blue (Poecillia wingei) 3-5cm",
+          "collections": [
+            "endlers"
+          ]
+        },
+        {
+          "id": "7517784211665",
+          "handle": "neon-tuxedo-endler-3-5cm",
+          "title": "Endler - Neon Tuxedo (Poecillia wingei) 3-5cm",
+          "collections": [
+            "endlers"
+          ]
+        },
+        {
+          "id": "7517784309969",
+          "handle": "french-blue-star-endler-3-5cm",
+          "title": "Endler - French Blue Star (Poecillia wingei) 3-5cm",
+          "collections": [
+            "endlers"
+          ]
+        },
+        {
+          "id": "7517821468881",
+          "handle": "endler-blonde-tiger-poecillia-wingei-3-5cm",
+          "title": "Endler - COMPAMA 31 (Poecillia wingei) 3-5cm",
+          "collections": [
+            "endlers"
+          ]
+        },
+        {
+          "id": "7517821665489",
+          "handle": "endler-el-tigre-poecillia-wingei-3-5cm",
+          "title": "Endler - EL TIGRE (Poecillia wingei) 3-5cm",
+          "collections": [
+            "endlers"
+          ]
+        },
+        {
+          "id": "7517821796561",
+          "handle": "endler-ginga-rubra-poecillia-wingei-3-5cm",
+          "title": "Endler - GINGA RUBRA (Poecillia wingei) 3-5cm",
+          "collections": [
+            "endlers"
+          ]
+        },
+        {
+          "id": "7517821829329",
+          "handle": "endler-gold-xtail-poecillia-wingei-3-5cm",
+          "title": "Endler - GOLD XTAIL (Poecillia wingei) 3-5cm",
+          "collections": [
+            "endlers"
+          ]
+        },
+        {
+          "id": "7517821862097",
+          "handle": "endler-neon-blonde-poecillia-wingei-3-5cm",
+          "title": "Endler - NEON BLONDE (Poecillia wingei) 3-5cm",
+          "collections": [
+            "endlers"
+          ]
+        },
+        {
+          "id": "7517821894865",
+          "handle": "endler-opal-poecillia-wingei-3-5cm-copy",
+          "title": "Endler - OPAL (Poecillia wingei) 3-5cm",
+          "collections": [
+            "endlers"
+          ]
+        },
+        {
+          "id": "7517821927633",
+          "handle": "endler-orchid-poecillia-wingei-3-5cm",
+          "title": "Endler - ORCHID (Poecillia wingei) 3-5cm",
+          "collections": [
+            "endlers"
+          ]
+        },
+        {
+          "id": "7526466584785",
+          "handle": "located-offsite-glowlight-tetra-2-4cm",
+          "title": "Glowlight Tetra 2.5–3 cm",
+          "collections": [
+            "tetras"
+          ]
+        },
+        {
+          "id": "7546420461777",
+          "handle": "burmese-rummy-nose-rasbora-sawbwa-resplendens-3-4cm",
+          "title": "Burmese Rummy Nose Rasbora (Sawbwa resplendens) 3-4cm",
+          "collections": [
+            "rasboras"
+          ]
+        },
+        {
+          "id": "7575752310993",
+          "handle": "black-emperor-tetra-3-5cm",
+          "title": "Black Emperor Tetra 3-5cm",
+          "collections": [
+            "tetras"
+          ]
+        },
+        {
+          "id": "7598071414993",
+          "handle": "gold-lace-glass-belly-short-body-guppy",
+          "title": "Gold Lace Glass Belly Short Body Guppy",
+          "collections": [
+            "guppies-and-endlers"
+          ]
+        },
+        {
+          "id": "7645997072593",
+          "handle": "ticto-barb-3-4cm",
+          "title": "Ticto Barb (Puntius ticto) 3-4cm",
+          "collections": [
+            "barbs"
+          ]
+        },
+        {
+          "id": "7655324385489",
+          "handle": "endler-santa-maria-poecillia-wingei-3-5cm",
+          "title": "Endler - SANTA MARIA (Poecilia wingei) 3-5cm",
+          "collections": [
+            "endlers"
+          ]
+        },
+        {
+          "id": "7708518973649",
+          "handle": "serpae-tetra-2-4cm",
+          "title": "Serpae Tetra 2-4cm",
+          "collections": [
+            "tetras"
+          ]
+        },
+        {
+          "id": "7771309441233",
+          "handle": "corydoras-pygmaeus-pygmy-albino-1-2cm",
+          "title": "Corydoras Pygmaeus Pygmy (Albino) 1-2cm",
+          "collections": [
+            "corydoras"
+          ]
+        },
+        {
+          "id": "7788177817809",
+          "handle": "c125-ceara-bulldog-cory-aspidoras-raimundi-3-5cm",
+          "title": "C125 Ceará Bulldog Cory (Aspidoras raimundi) 3-5cm",
+          "collections": [
+            "corydoras"
+          ]
+        },
+        {
+          "id": "7789122617553",
+          "handle": "ticto-barbs-2-4cm",
+          "title": "Ticto Barbs 2-4cm",
+          "collections": [
+            "barbs"
+          ]
+        },
+        {
+          "id": "7789223936209",
+          "handle": "lemon-tetra-3cm",
+          "title": "Lemon Tetra 2-4cm",
+          "collections": [
+            "tetras"
+          ]
+        },
+        {
+          "id": "7789243334865",
+          "handle": "flame-tetra-hyphessobrycon-flammeus-3cm",
+          "title": "Flame Tetra 2-4cm",
+          "collections": [
+            "tetras"
+          ]
+        },
+        {
+          "id": "7789246709969",
+          "handle": "white-widow-tetra-3cm",
+          "title": "White Widow Tetra 2-4cm",
+          "collections": [
+            "tetras"
+          ]
+        },
+        {
+          "id": "7789246742737",
+          "handle": "albino-neon-tetra-3cm",
+          "title": "Albino Neon Tetra 2-4cm",
+          "collections": [
+            "tetras"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cmgsmq0361rwsj8ceelh3bcf5",
+      "title": "FROZEN FOODS",
+      "tiers": [
+        {
+          "id": "fda9edf9-1ded-4fbd-a25a-e425d9262e12",
+          "name": "Buy 1-9 items",
+          "minimum": 1,
+          "maximum": 9,
+          "discount": {
+            "type": "amount",
+            "value": 0
+          }
+        },
+        {
+          "id": "d606005c-b184-4c51-956c-69a7e7bcc5f4",
+          "name": "Buy 10-19 items",
+          "minimum": 10,
+          "maximum": 19,
+          "discount": {
+            "type": "amount",
+            "value": 0.5
+          }
+        },
+        {
+          "id": "93ce13ce-4683-4b60-ba13-6d70ad702837",
+          "name": "Buy 20+ items",
+          "minimum": 20,
+          "maximum": null,
+          "discount": {
+            "type": "amount",
+            "value": 1
+          }
+        }
+      ],
+      "products": [
+        {
+          "id": "6840217272529",
+          "handle": "orca-frozen-bloodworms-100-grams-chocolate-pack-blood-worms",
+          "title": "ORCA Frozen Bloodworms 100g",
+          "collections": [
+            "frozen"
+          ]
+        },
+        {
+          "id": "6840230772945",
+          "handle": "orca-frozen-brine-shrimp-100g-blister-pack-for-1",
+          "title": "ORCA Frozen Brine Shrimp 100g Blister Pack",
+          "collections": [
+            "frozen"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cmgzulas806befdch0jkazwtt",
+      "title": "Pea Puffers",
+      "tiers": [
+        {
+          "id": "ba5f6711-e2e5-492b-82c9-7cbfbdb47bc2",
+          "name": "Buy 1-2",
+          "minimum": 1,
+          "maximum": 2,
+          "discount": {
+            "type": "amount",
+            "value": 0
+          }
+        },
+        {
+          "id": "f50a88b7-15bd-434a-b994-65e49eaed469",
+          "name": "Buy 3 or more",
+          "minimum": 3,
+          "maximum": null,
+          "discount": {
+            "type": "amount",
+            "value": 4
+          }
+        }
+      ],
+      "products": [
+        {
+          "id": "6918785958097",
+          "handle": "pea-puffer-juveniles",
+          "title": "Dwarf Pea Puffer (Carinotetraodon travancoricus) (Juveniles) 1-1.5 cm",
+          "collections": []
+        }
+      ]
+    },
+    {
+      "id": "cmsxs2o970l988f45vz0794zp",
+      "title": "OTOCINCLUS DEAL",
+      "tiers": [
+        {
+          "id": "a116fdd2-58bb-482f-b988-9d243bb55c35",
+          "name": "Buy 1-3",
+          "minimum": 1,
+          "maximum": 3,
+          "discount": {
+            "type": "amount",
+            "value": 0
+          }
+        },
+        {
+          "id": "41f3b4ba-a79b-4fc5-9572-ecdb58b37873",
+          "name": "Buy 4-5",
+          "minimum": 4,
+          "maximum": 5,
+          "discount": {
+            "type": "amount",
+            "value": 2
+          }
+        },
+        {
+          "id": "8d57ccc3-2c2e-43da-8cf4-472fa58a2e84",
+          "name": "Buy 6 or more",
+          "minimum": 6,
+          "maximum": null,
+          "discount": {
+            "type": "amount",
+            "value": 3
+          }
+        }
+      ],
+      "products": [
+        {
+          "id": "6840207573201",
+          "handle": "otocinclus-arnoldi",
+          "title": "Otocinclus Arnoldi (Otocinclus arnoldi)",
+          "collections": []
+        }
+      ]
+    },
+    {
+      "id": "cmtq9oitc85iv9y44d8eiw5xh",
+      "title": "BUNDLE & SAVE",
+      "tiers": [
+        {
+          "id": "54840e6d-6aed-4e53-bf18-b2fb085e0cc8",
+          "name": "For 1 to 3",
+          "minimum": 1,
+          "maximum": 3,
+          "discount": {
+            "type": "percentage",
+            "value": 0
+          }
+        },
+        {
+          "id": "0a7f86d7-f402-45b1-9044-0fdd2454b31e",
+          "name": "For 4 to 9",
+          "minimum": 4,
+          "maximum": 9,
+          "discount": {
+            "type": "amount",
+            "value": 0.5
+          }
+        },
+        {
+          "id": "81cd3232-e2d7-41d2-ae22-f5211de3bc04",
+          "name": "For 10 to 19",
+          "minimum": 10,
+          "maximum": 19,
+          "discount": {
+            "type": "amount",
+            "value": 1
+          }
+        },
+        {
+          "id": "8d9a83e2-8e4c-4668-adf2-8c3f73bcfb66",
+          "name": "For 20 or more",
+          "minimum": 20,
+          "maximum": null,
+          "discount": {
+            "type": "amount",
+            "value": 1.5
+          }
+        }
+      ],
+      "products": [
+        {
+          "id": "6840207540433",
+          "handle": "red-cherry-shrimp",
+          "title": "RCS Red Cherry Shrimp 0.5-3cm",
+          "collections": [
+            "shrimps"
+          ]
+        }
+      ]
+    }
+  ]
+}

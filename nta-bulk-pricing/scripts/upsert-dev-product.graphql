@@ -1,0 +1,21 @@
+mutation UpsertTierWeaveDevProduct($input: ProductSetInput!, $identifier: ProductSetIdentifiers!) {
+  productSet(input: $input, identifier: $identifier, synchronous: true) {
+    product {
+      id
+      title
+      handle
+      status
+      variants(first: 5) {
+        nodes {
+          id
+          price
+          inventoryPolicy
+        }
+      }
+    }
+    userErrors {
+      field
+      message
+    }
+  }
+}

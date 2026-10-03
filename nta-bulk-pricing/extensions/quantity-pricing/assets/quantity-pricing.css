@@ -1,0 +1,34 @@
+.nta-bulk-pricing {
+  border: 1px solid color-mix(in srgb, var(--nta-bulk-pricing-accent) 35%, #d8d8d8);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.nta-bulk-pricing__heading,
+.nta-bulk-pricing__rule-name {
+  margin: 0 0 0.65rem;
+}
+
+.nta-bulk-pricing__rule-name {
+  color: rgba(0, 0, 0, 0.65);
+  font-size: 0.9em;
+}
+
+.nta-bulk-pricing__table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.nta-bulk-pricing__table th,
+.nta-bulk-pricing__table td {
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  padding: 0.55rem 0;
+  text-align: left;
+}
+
+.nta-bulk-pricing__table th:last-child,
+.nta-bulk-pricing__table td:last-child {
+  color: var(--nta-bulk-pricing-accent);
+  font-weight: 600;
+  text-align: right;
+}

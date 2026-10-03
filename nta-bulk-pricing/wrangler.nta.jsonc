@@ -1,0 +1,25 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "tierweave-nta",
+  "main": "./workers/app.ts",
+  "compatibility_date": "2026-09-26",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "observability": {
+    "enabled": true
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "tierweave-nta",
+      "database_id": "fb2942c4-a608-47e7-9a96-20ecfa229f92",
+      "migrations_dir": "d1-migrations"
+    }
+  ],
+  "vars": {
+    "SHOPIFY_API_KEY": "614ce0ecd6c0e5ffb6eab7a798ca0717",
+    "SHOPIFY_APP_URL": "https://tierweave-nta.livetranscriber.workers.dev",
+    "SCOPES": "read_products,write_app_proxy,write_discounts"
+  }
+}

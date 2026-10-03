@@ -1,0 +1,29 @@
+api_version = "2026-07"
+
+[[extensions]]
+name = "t:name"
+handle = "nta-bulk-pricing-discount"
+type = "function"
+uid = "c604cb25-5ab8-45d9-a473-60772f2929e02ef4a206"
+description = "t:description"
+
+  [[extensions.targeting]]
+  target = "cart.lines.discounts.generate.run"
+  input_query = "src/cart_lines_discounts_generate_run.graphql"
+  export = "cart_lines_discounts_generate_run"
+
+  [extensions.input.variables]
+  namespace = "$app:nta-bulk-pricing"
+  key = "function-configuration"
+
+  [extensions.ui]
+  enable_create = false
+
+  [extensions.ui.paths]
+  create = "/app/discounts/new"
+  details = "/app/discounts/:id"
+
+  [extensions.build]
+  command = "cargo build --target=wasm32-unknown-unknown --release"
+  path = "target/wasm32-unknown-unknown/release/nta-bulk-pricing-discount.wasm"
+  watch = [ "src/**/*.rs" ]
