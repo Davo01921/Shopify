@@ -1,5 +1,12 @@
 # NTA merchant TierWeave backend
 
+## Current NTA status
+
+TierWeave is **CLOSED / PRODUCTION / BAU** for Nano Tanks Australia as of 3 October 2026. The owner confirms live production use and real sales.
+
+This document describes one backend/configuration boundary in the repository. Do not infer the active live Shopify distribution relationship only from this file; verify active Shopify account configuration when troubleshooting.
+
+
 The Shopify app at `dev.shopify.com/dashboard/47176799/apps/428343033857`
 has client ID `614ce0ecd6c0e5ffb6eab7a798ca0717`. It is separate from the
 public TierWeave app and the NTA Bulk Pricing development app.
@@ -24,14 +31,10 @@ The active Shopify app version must be updated separately so its application,
 OAuth callback, webhook, and app-proxy URLs point to the new Worker. Changing
 the Worker does not update the Shopify app version.
 
-## Shopify Basic limitation
+## Historical Shopify Basic design constraint
 
-Nano Tanks Australia is on Shopify Basic. Shopify permits custom apps with
-Shopify Functions only on Plus. This merchant app can use the separate backend
-for its admin and storefront app proxy, but its Discount Function cannot be
-used for reliable checkout pricing on the live Basic store. The public TierWeave
-app, once approved for Shopify App Store distribution, is the path for Function
-discounts on Basic. Do not replace Koala or publish the six migration rules
-through this merchant app.
+The Basic-plan Function/distribution limitation shaped the deployment architecture. For current NTA operations, treat the active installed Shopify configuration and the live accepted checkout behaviour as production authority.
+
+Do not repurpose this NTA-specific backend as a public-market deployment without reopening the commercialization project.
 
 Shopify source: https://shopify.dev/docs/apps/build/functions
