@@ -1,5 +1,12 @@
 # Shopify App Store submission package
 
+## Project status
+
+TierWeave is **CLOSED / PRODUCTION / BAU for NTA** as of 3 October 2026.
+
+This document is retained for a future commercialization phase. App Store marketing, billing and public launch work are not required for the current NTA production system and should not keep the NTA project open.
+
+
 ## Positioning
 
 - Final app name: TierWeave
