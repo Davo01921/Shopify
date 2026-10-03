@@ -86,6 +86,8 @@ Configured tiers:
 
 ## Migration status
 
+**NTA migration closed / production accepted on 3 October 2026.**
+
 The exact tier types and values for all six active campaigns were recovered from Koala's live storefront state on 26 September 2026. A targeted audit of 349 products across the live-fish, invertebrate, and frozen-food taxonomy found 127 current campaign members:
 
 - Group Fish: 107 products
@@ -95,10 +97,6 @@ The exact tier types and values for all six active campaigns were recovered from
 
 The reproducible product-level capture is stored in `docs/koala-campaigns-2026-09-26.json`. No production replacement rules have been enabled.
 
-Still required before cutover:
+The earlier cutover checklist is now complete for NTA project purposes. Development-store parity and checkout evidence were recorded in `STAGING_VERIFICATION.md`, and the owner confirmed on 3 October 2026 that TierWeave is live, tested in production, and processing sales.
 
-- replacement parity tests after the exact product sets are loaded;
-- the 20+ Frozen Foods live-cart result when stock permits, or equivalent checkout evidence;
-- final side-by-side cart and checkout testing on the approved public app.
-
-Koala remains active until the replacement matches all six live checkout behaviours. The configured values above take precedence over Koala's inaccurate promotional labels.
+The configured values above remain the historical migration baseline and take precedence over Koala's inaccurate promotional labels. Any remaining Koala subscription/account cleanup is business administration, not unfinished TierWeave engineering.
