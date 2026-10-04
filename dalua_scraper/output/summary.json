@@ -1,0 +1,13 @@
+{
+  "products": 477,
+  "with_descriptions": 477,
+  "with_images": 477,
+  "with_product_urls": 477,
+  "with_markdown": 476,
+  "with_stock_status": 0,
+  "prices_ex_gst_confirmed": true,
+  "gst_rate": "10%",
+  "source": "https://daluawholesale.com.au/wp-json/wc/store/v1/products",
+  "price_crosscheck_compared": 9,
+  "price_crosscheck_matches": 9
+}

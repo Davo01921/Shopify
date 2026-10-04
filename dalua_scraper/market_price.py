@@ -1,0 +1,106 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+import csv,json,re,statistics,time
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from difflib import SequenceMatcher
+from pathlib import Path
+from urllib.parse import urljoin
+import requests
+SRC=Path('dalua_scraper/output/dalua_freshwater_candidates.csv'); OUT=Path('dalua_scraper/output')
+RETAILERS={'DALUA AU':'https://dalua.com.au','Nature Aquariums':'https://www.natureaquariums.com.au','Nature Pets':'https://naturepets.com.au','IW Aquariums':'https://iwaquariums.com.au','The Tech Den':'https://www.thetechden.com.au'}
+UA='Mozilla/5.0 (compatible; NTA-Market-Pricing/1.6)'
+SIZE_RE=re.compile(r'(?i)\b(\d+(?:\.\d+)?)\s*(ml|l|g|kg|cm|mm|w|inch|inches)\b')
+GENERIC={'wio','dalua','fresh','aquarium','aquariums','stone','stones','rock','rocks','nano','mega','box','set','bag','river','wood','boulder','boulders','the','and','of','for','with','per','kg','cm','mm','ml','litre','litres'}
+FORMS={'kit','riverbed','sand','soil','fertiliser','fertilizer','light','led','glue','pump','filter','diffuser','siphon','tweezers','substrate','florabed'}
+GRADE_TOKENS={'fine','thick','coarse','powder'}
+def canon(s):
+ s=(s or '').lower().replace('riverkit','river kit').replace('sliver shine','silver shine')
+ return s
+def norm(s): return re.sub(r'\s+',' ',re.sub(r'[^a-z0-9]+',' ',canon(s))).strip()
+def sizes(s): return [(float(v),u.lower().replace('inches','inch')) for v,u in SIZE_RE.findall(canon(s))]
+def sizes_compatible(a,b):
+ sa,sb=sizes(a),sizes(b)
+ if not sa or not sb:return True
+ for va,ua in sa:
+  for vb,ub in sb:
+   if ua!=ub:continue
+   if va==vb:return True
+   if ua=='kg' and max(va,vb)>=10 and abs(va-vb)<=1.1:return True
+   if max(va,vb)>0 and abs(va-vb)/max(va,vb)<=0.03:return True
+ return False
+def strip_sizes(s): return SIZE_RE.sub(' ',canon(s))
+def model_tokens(s): return {t for t in norm(strip_sizes(s)).split() if len(t)>2 and t not in GENERIC and t not in FORMS and not t.isdigit()}
+def product_forms(s): return {t for t in norm(s).split() if t in FORMS}
+def forms_compatible(a,b):
+ fa,fb=product_forms(a),product_forms(b)
+ if not fa or not fb:return True
+ return bool(fa & fb)
+def grade(s):
+ t=set(norm(s).split())
+ if 'fine' in t:return 'fine'
+ if 'thick' in t or 'coarse' in t:return 'thick'
+ if 'powder' in t:return 'powder'
+ # Florabed with no explicit grade is treated as standard/unknown, never Fine/Thick.
+ if 'florabed' in t:return 'standard'
+ return None
+def grades_compatible(a,b):
+ ga,gb=grade(a),grade(b)
+ if ga is None and gb is None:return True
+ if ga is None or gb is None:return False
+ return ga==gb
+def model_overlap(ma,mb):
+ if not ma:return 1.0
+ return len(ma&mb)/len(ma)
+def score(a,b):
+ na,nb=norm(a),norm(b)
+ if not na or not nb or not sizes_compatible(a,b) or not forms_compatible(a,b) or not grades_compatible(a,b):return 0.0
+ ma,mb=model_tokens(a),model_tokens(b)
+ if model_overlap(ma,mb)<0.5:return 0.0
+ seq=SequenceMatcher(None,na,nb).ratio(); ta,tb=set(na.split()),set(nb.split()); jac=len(ta&tb)/max(1,len(ta|tb))
+ return .7*seq+.3*jac
+def fetch_catalog(base):
+ s=requests.Session();s.headers['User-Agent']=UA;allp=[]
+ for page in range(1,11):
+  try:r=s.get(f'{base}/products.json?limit=250&page={page}',timeout=12)
+  except Exception:break
+  if r.status_code!=200:break
+  try:data=r.json().get('products',[])
+  except Exception:break
+  if not data:break
+  for p in data:
+   title=p.get('title','')
+   for v in p.get('variants') or []:
+    vt=v.get('title','');label=title if vt in ('','Default Title') else f'{title} {vt}'
+    try:price=float(v.get('price'))
+    except:continue
+    if price>0:allp.append({'title':label,'price':price,'url':urljoin(base,f"/products/{p.get('handle','')}")})
+  if len(data)<250:break
+  time.sleep(.1)
+ return allp
+def main():
+ catalogs={}
+ with ThreadPoolExecutor(max_workers=len(RETAILERS)) as ex:
+  futs={ex.submit(fetch_catalog,b):n for n,b in RETAILERS.items()}
+  for fut in as_completed(futs):
+   n=futs[fut]
+   try:catalogs[n]=fut.result()
+   except Exception as e:print('WARN',n,e);catalogs[n]=[]
+   print(n,len(catalogs[n]))
+ rows=list(csv.DictReader(SRC.open(encoding='utf-8-sig')));out=[]
+ for r in rows:
+  obs=[]
+  for retailer,items in catalogs.items():
+   best=(0,None)
+   for it in items:
+    s=score(r['dalua_title'],it['title'])
+    if s>best[0]:best=(s,it)
+   if best[1] and best[0]>=.72:obs.append({'retailer':retailer,'price':best[1]['price'],'score':round(best[0],3),'title':best[1]['title'],'url':best[1]['url']})
+  prices=[o['price'] for o in obs];cost=float(r['dalua_cost_plus_gst']) if r.get('dalua_cost_plus_gst') else 0
+  median=round(statistics.median(prices),2) if len(prices)>=2 else None
+  status='priced' if median is not None and median>=cost else ('below_cost_review' if median is not None else 'insufficient_market_data')
+  x=dict(r);x.update({'market_observations':len(obs),'market_median_aud':f'{median:.2f}' if median is not None else '', 'recommended_retail_aud':f'{median:.2f}' if status=='priced' else '', 'pricing_status':status,'market_sources_json':json.dumps(obs,separators=(',',':'))});out.append(x)
+ fields=list(out[0])
+ with (OUT/'dalua_market_pricing.csv').open('w',encoding='utf-8-sig',newline='') as f:w=csv.DictWriter(f,fieldnames=fields);w.writeheader();w.writerows(out)
+ summary={'input_candidates':len(rows),'priced':sum(r['pricing_status']=='priced' for r in out),'insufficient_market_data':sum(r['pricing_status']=='insufficient_market_data' for r in out),'below_cost_review':sum(r['pricing_status']=='below_cost_review' for r in out),'retailers':{k:len(v) for k,v in catalogs.items()}}
+ (OUT/'market_pricing_summary.json').write_text(json.dumps(summary,indent=2));print(json.dumps(summary,indent=2))
+if __name__=='__main__':main()

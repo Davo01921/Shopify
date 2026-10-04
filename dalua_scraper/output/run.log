@@ -1,0 +1,18 @@
+Store API page 1: 100 products; cumulative=100
+Store API page 2: 100 products; cumulative=200
+Store API page 3: 100 products; cumulative=300
+Store API page 4: 100 products; cumulative=400
+Store API page 5: 77 products; cumulative=477
+{
+  "products": 477,
+  "with_descriptions": 477,
+  "with_images": 477,
+  "with_product_urls": 477,
+  "with_markdown": 476,
+  "with_stock_status": 0,
+  "prices_ex_gst_confirmed": true,
+  "gst_rate": "10%",
+  "source": "https://daluawholesale.com.au/wp-json/wc/store/v1/products",
+  "price_crosscheck_compared": 9,
+  "price_crosscheck_matches": 9
+}
