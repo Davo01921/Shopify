@@ -4,6 +4,8 @@ TierWeave is **CLOSED / PRODUCTION / BAU for Nano Tanks Australia** as of 3 Octo
 
 Nothing in this file blocks the live NTA system or project closure.
 
+The old standalone **Koala Upsell Replacement** project is **CANCELLED / SUPERSEDED**. TierWeave is the production replacement, so there is no separate Koala-replacement build to resume. Historical PRs #2 and #3 are closed as superseded by the completed production implementation and closeout in PR #4.
+
 ## Future commercialization phase
 
 Reopen TierWeave as a separate project when the owner is ready to take it to market.
