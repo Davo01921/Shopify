@@ -8,6 +8,8 @@ The owner confirmed on 3 October 2026 that TierWeave is already live on Nano Tan
 
 That production confirmation resolves the remaining NTA cutover/acceptance question. TierWeave should no longer be tracked as an active build, staging project or pending Koala replacement.
 
+The previously separate **Koala Upsell Replacement** project is cancelled/superseded because TierWeave now provides the accepted production quantity-pricing capability. Historical Phase 1/2 Koala-replacement PRs #2 and #3 are closed as superseded; merged production closeout PR #4 is the canonical outcome.
+
 The project may be reopened later as a separate commercialization effort when the owner is ready to take TierWeave to market.
 
 ## Completed NTA scope
